@@ -28,19 +28,78 @@ const windowSize = {
 };
 
 // Utils setup
+let a80, a90;
+let center = new THREE.Vector3();
+let loader = new GLTFLoader();
 const textureLoader = new THREE.TextureLoader();
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  20,
-  windowSize.width / windowSize.height,
-  0.1,
-  150
-);
+const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.1, 2000);
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
 });
 renderer.setSize(windowSize.width, windowSize.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+// Floor texture
+const FLOOR_TEX = "./assets/floor/Marble016_2K_Color.png";
+const DISPLACEMENT_MAP = "./assets/floor/Marble016_2K_Displacement.png";
+const ROUGHNESS = "./assets/floor/Marble016_2K_Roughness.png";
+// const AMBIENT_OCCLUSION = "./assets/floor/PavingStones049_2K_AmbientOcclusion.png"
+const NORMAL_GL = "./assets/floor/Marble016_2K_NormalGL.png";
+
+const TEX_SCALE = 25;
+const PLANE_WIDTH = 100;
+const PLANE_HEIGHT = 100;
+
+const floorTexture = textureLoader.load(FLOOR_TEX, (texture) => {
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  const scale = TEX_SCALE;
+  texture.repeat.set(scale, scale);
+});
+const dispMap = textureLoader.load(DISPLACEMENT_MAP, (texture) => {
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  const scale = TEX_SCALE;
+  texture.repeat.set(scale, scale);
+});
+const rough = textureLoader.load(ROUGHNESS, (texture) => {
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  const scale = TEX_SCALE;
+  texture.repeat.set(scale, scale);
+});
+// const ambientOcc = textureLoader.load(AMBIENT_OCCLUSION, (texture) => {
+//   texture.wrapS = THREE.RepeatWrapping;
+//   texture.wrapT = THREE.RepeatWrapping;
+//   const scale = TEX_SCALE
+//   texture.repeat.set(scale, scale);
+// });
+const normalGL = textureLoader.load(NORMAL_GL, (texture) => {
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  const scale = TEX_SCALE;
+  texture.repeat.set(scale, scale);
+});
+
+const geometry = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);
+const material = new THREE.MeshStandardMaterial({
+  map: floorTexture,
+  displacementMap: dispMap,
+  displacementScale: 1,
+  // aoMap: ambientOcc,
+  normalMap: normalGL,
+  normalMapType: THREE.TangentSpaceNormalMap,
+  roughnessMap: rough,
+  roughness: 1,
+  // metalnessMap: metal,
+  // metalness: 1,
+});
+
+const floor = new THREE.Mesh(geometry, material);
+floor.rotation.x = -Math.PI / 2;
+floor.position.y = -0.8;
+scene.add(floor);
 
 // Lighting and cameras
 scene.background = new THREE.Color(0xaaaaaa);
@@ -52,11 +111,7 @@ const directionalLight = new THREE.DirectionalLight(
 directionalLight.position.set(1, 1, 1); // Position of the light
 scene.add(directionalLight);
 
-// Load model
-// Wait for both models to be loaded before positioning the camera
-let a80, a90;
-let loader = new GLTFLoader();
-let center = new THREE.Vector3();
+
 
 Promise.all([
   new Promise((resolve) => loader.load("/assets/a80_supra.glb", resolve)),
@@ -100,8 +155,8 @@ function showOnCanvas() {
   stats.begin();
   controls.update();
   angle += 0.0015;
-  const distance = 35; // Distance to models.
-  const y = 55; // Higher values means higher angles. Opposite for lower.
+  const distance = 45; // Distance to models.
+  const y = 30; // Higher values means higher angles. Opposite for lower.
   const x = center.x + distance * Math.cos(angle);
   const z = center.z + distance * Math.sin(angle);
   camera.position.set(x, y, z);
