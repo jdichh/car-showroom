@@ -136,25 +136,25 @@ const spotlightParams = {
   frontSpotlightIntensity: 10,
   frontSpotlightAngle: 1.57.toFixed(2),
   frontSpotlightPenumbra: 0.65,
-  frontSpotlightDistance: 36,
+  frontSpotlightDistance: 27,
 
   rearSpotlightColor: WHITE,
   rearSpotlightIntensity: 10,
   rearSpotlightAngle: 1.57.toFixed(2),
   rearSpotlightPenumbra: 0.65,
-  rearSpotlightDistance: 36,
+  rearSpotlightDistance: 33,
 
   rightSpotlightColor: WHITE,
-  rightSpotlightIntensity: 10,
+  rightSpotlightIntensity: 15,
   rightSpotlightAngle: 1.57.toFixed(2),
   rightSpotlightPenumbra: 0.65,
-  rightSpotlightDistance: 36,
+  rightSpotlightDistance: 27,
 
   leftSpotlightColor: WHITE,
-  leftSpotlightIntensity: 10,
+  leftSpotlightIntensity: 15,
   leftSpotlightAngle: 1.57.toFixed(2),
   leftSpotlightPenumbra: 0.65,
-  leftSpotlightDistance: 36,
+  leftSpotlightDistance: 27,
 };
 
 //////////////////////////////////////////
@@ -176,14 +176,14 @@ directionalLight.shadow.camera.left = -50;
 directionalLight.shadow.camera.right = 50;
 directionalLight.shadow.camera.top = 50;
 directionalLight.shadow.camera.bottom = -50;
-directionalLight.shadow.mapSize.width = 1024;
-directionalLight.shadow.mapSize.height = 1024;
+directionalLight.shadow.mapSize.width = 512;
+directionalLight.shadow.mapSize.height = 512;
 
 const spotlight = new THREE.SpotLight(WHITE, 5, 20, Math.PI / 3, 0.2);
-const frontSpotlight = new THREE.SpotLight(spotlightParams.frontSpotlightColor, 90, 15, Math.PI * 0.1, 0.25);
-const rearSpotlight = new THREE.SpotLight(spotlightParams.rearSpotlightColor, 90, 15, Math.PI * 0.1,0.25 );
-const rightSpotlight = new THREE.SpotLight( WHITE, 90, 15, Math.PI * 0.1, 0.25);
-const leftSpotlight = new THREE.SpotLight( WHITE, 90, 15, Math.PI * 0.1, 0.25);
+const frontSpotlight = new THREE.SpotLight(spotlightParams.frontSpotlightColor, 90, 20, Math.PI * 0.1, 0.25);
+const rearSpotlight = new THREE.SpotLight(spotlightParams.rearSpotlightColor, 90, 20, Math.PI * 0.1, 0.25);
+const rightSpotlight = new THREE.SpotLight(spotlightParams.rearSpotlightColor, 90, 20, Math.PI * 0.1, 0.25);
+const leftSpotlight = new THREE.SpotLight(spotlightParams.rearSpotlightColor, 90, 200, Math.PI * 0.1, 0.25);
 ////////// SETTING UP SPOTLIGHT POSITIONS //////////
 const frontOffset = new THREE.Vector3(0, 0, 25); // Front of the car
 const rearOffset = new THREE.Vector3(0, 0, -25); // Rear of the car
@@ -195,11 +195,9 @@ spotlight.target = car1;
 spotlight.castShadow = true;
 spotlight.shadow.bias = -0.001; // Fixes shadow artifacts.
 spotlight.shadow.camera.near = 0.1;
-spotlight.shadow.camera.near = 0.1;
 spotlight.shadow.camera.far = 30;
 spotlight.shadow.mapSize.width = 1024;
 spotlight.shadow.mapSize.height = 1024;
-spotlight.intensity;
 scene.add(spotlight);
 ////////// FRONT SPOTLIGHT //////////
 frontSpotlight.position.set(-10, 10, 40);
@@ -207,9 +205,9 @@ frontSpotlight.position.copy(car1.position).add(frontOffset);
 frontSpotlight.target = car1;
 frontSpotlight.castShadow = true;
 frontSpotlight.shadow.camera.near = 0.1;
-frontSpotlight.shadow.camera.far = 30;
-frontSpotlight.shadow.mapSize.width = 1024;
-frontSpotlight.shadow.mapSize.height = 1024;
+frontSpotlight.shadow.camera.far = 25;
+frontSpotlight.shadow.mapSize.width = 512;
+frontSpotlight.shadow.mapSize.height = 512;
 scene.add(frontSpotlight);
 ////////// REAR SPOTLIGHT //////////
 rearSpotlight.position.set(-5, 10, -11);
@@ -217,27 +215,27 @@ rearSpotlight.position.copy(car1.position).add(rearOffset);
 rearSpotlight.target = car1;
 rearSpotlight.castShadow = true;
 rearSpotlight.shadow.camera.near = 0.1;
-rearSpotlight.shadow.camera.far = 30;
-rearSpotlight.shadow.mapSize.width = 1024;
-rearSpotlight.shadow.mapSize.height = 1024;
+rearSpotlight.shadow.camera.far = 25;
+rearSpotlight.shadow.mapSize.width = 512;
+rearSpotlight.shadow.mapSize.height = 512;
 scene.add(rearSpotlight);
 ////////// RIGHT SPOTLIGHT //////////
 rightSpotlight.position.copy(car1.position).add(rightOffset);
 rightSpotlight.target.position.copy(car1.position).add(rightOffset).sub(leftOffset);
 rightSpotlight.castShadow = true;
 rightSpotlight.shadow.camera.near = 0.1;
-rightSpotlight.shadow.camera.far = 30;
-rightSpotlight.shadow.mapSize.width = 1024;
-rightSpotlight.shadow.mapSize.height = 1024;
+rightSpotlight.shadow.camera.far = 25;
+rightSpotlight.shadow.mapSize.width = 512;
+rightSpotlight.shadow.mapSize.height = 512;
 scene.add(rightSpotlight);
 ////////// LEFT SPOTLIGHT //////////
 leftSpotlight.position.copy(car1.position).add(leftOffset);
 leftSpotlight.target.position.copy(car1.position).add(leftOffset).sub(rightOffset);
 leftSpotlight.castShadow = true;
-leftSpotlight.shadow.camera.near = 0.1;
-leftSpotlight.shadow.camera.far = 30;
-leftSpotlight.shadow.mapSize.width = 1024;
-leftSpotlight.shadow.mapSize.height = 1024;
+leftSpotlight.shadow.camera.near = 5;
+leftSpotlight.shadow.camera.far = 25;
+leftSpotlight.shadow.mapSize.width = 512;
+leftSpotlight.shadow.mapSize.height = 512;
 scene.add(leftSpotlight);
 
 ////////////////////////////////////
@@ -249,19 +247,26 @@ const effectComposer = new EffectComposer(renderer);
 ///// SSAO
 const ssaoPass = new SSAOPass(scene, camera);
 effectComposer.addPass(ssaoPass);
-ssaoPass.intensity = 0.5;
+ssaoPass.intensity = 0.2;
 
 /////////////////////////////////
 ////////// LOAD MODELS //////////
 /////////////////////////////////
 
 Promise.all([
-  new Promise((resolve) => loader.load("/assets/cars/a90_supra.glb", resolve)),
+  new Promise((resolve) => loader.load("/assets/cars/toy_sup_red.glb", resolve)),
 ]).then(([gltf1]) => {
   // Car Model Setup
   car1 = gltf1.scene;
   car1.position.y = -0.1;
+
+  // Supra scale
   car1.scale.set(1.5, 1.5, 1.5);
+
+  // Ghibli scale
+  // car1.scale.set(1.75, 1.75, 1.75);
+
+
   car1.castShadow = true;
 
   // Setting up shadow according to the car's meshes.
@@ -286,20 +291,28 @@ Promise.all([
 ]).then(([gltf2, gltf3, gltf4, gltf5]) => {
   // Front of car
   spotlightProps[0] = gltf2.scene;
-  spotlightProps[0].position.set(0, 0, 29.5);
-  spotlightProps[0].rotation.y = 9.4;
+  spotlightProps[0].position.set(2.5, -0.19, 26);
+  spotlightProps[0].rotation.y = 9.425;
+  spotlightProps[0].rotation.x = -1.5;
 
   // Rear of car
   spotlightProps[1] = gltf3.scene;
-  spotlightProps[1].position.set(0, 0, -29.5);
+  spotlightProps[1].position.set(-2.5, -0.19, -26);
+  spotlightProps[1].rotation.x = 1.5;
 
   // Left of car
   spotlightProps[2] = gltf4.scene;
-  spotlightProps[2].position.set(-29.5, 0, 0);
+  spotlightProps[2].position.set(-26.025, -0.05, -2.55);
+  spotlightProps[2].rotation.y = 3.15;
+  spotlightProps[2].rotation.x = 1.57;
+  spotlightProps[2].rotation.z = 1.575;
 
   // Right of car
   spotlightProps[3] = gltf5.scene;
-  spotlightProps[3].position.set(29.5, 0, 0);
+  spotlightProps[3].position.set(26.025, -0.13, -2.55);
+ 
+  spotlightProps[3].rotation.x = 1.57;
+  spotlightProps[3].rotation.z = 1.575;
 
   // Add all spotlightProps to the scene
   for (const spotlightProp of spotlightProps) {
@@ -413,7 +426,7 @@ topSpotlightFolder.addColor(spotlightParams, "topSpotlightColor").onChange(() =>
 topSpotlightFolder.add(spotlightParams, "topSpotlightIntensity", 0, 50).onChange(() => {spotlight.intensity = spotlightParams.topSpotlightIntensity;});
 topSpotlightFolder.add(spotlightParams, "topSpotlightAngle", 0, Math.PI).onChange(() => {spotlight.angle = spotlightParams.topSpotlightAngle;});
 topSpotlightFolder.add(spotlightParams, "topSpotlightPenumbra", 0, 2).onChange(() => {spotlight.penumbra = spotlightParams.topSpotlightPenumbra;});
-topSpotlightFolder.add(spotlightParams, "topSpotlightDistance", 1, 50).onChange(() => {spotlight.distance = spotlightParams.topSpotlightDistance;});
+topSpotlightFolder.add(spotlightParams, "topSpotlightDistance", 1, 90).onChange(() => {spotlight.distance = spotlightParams.topSpotlightDistance;});
 
 ////////// FRONT SPOTLIGHT GUI
 const frontSpotlightFolder = gui.addFolder("Front Spotlight");
@@ -421,7 +434,7 @@ frontSpotlightFolder.addColor(spotlightParams, "frontSpotlightColor").onChange((
 frontSpotlightFolder.add(spotlightParams, "frontSpotlightIntensity", 0, 50).onChange(() => {frontSpotlight.intensity = spotlightParams.frontSpotlightIntensity;});
 frontSpotlightFolder.add(spotlightParams, "frontSpotlightAngle", 0, Math.PI).onChange(() => {frontSpotlight.angle = spotlightParams.frontSpotlightAngle;});
 frontSpotlightFolder.add(spotlightParams, "frontSpotlightPenumbra", 0, 2).onChange(() => {frontSpotlight.penumbra = spotlightParams.frontSpotlightPenumbra;});
-frontSpotlightFolder.add(spotlightParams, "frontSpotlightDistance", 1, 50).onChange(() => {frontSpotlight.distance = spotlightParams.frontSpotlightDistance;});
+frontSpotlightFolder.add(spotlightParams, "frontSpotlightDistance", 1, 90).onChange(() => {frontSpotlight.distance = spotlightParams.frontSpotlightDistance;});
 
 ////////// REAR SPOTLIGHT GUI
 const rearSpotlightFolder = gui.addFolder("Rear Spotlight");
@@ -429,7 +442,7 @@ rearSpotlightFolder.addColor(spotlightParams, "rearSpotlightColor").onChange(() 
 rearSpotlightFolder.add(spotlightParams, "rearSpotlightIntensity", 0, 50).onChange(() => {rearSpotlight.intensity = spotlightParams.rearSpotlightIntensity;});
 rearSpotlightFolder.add(spotlightParams, "rearSpotlightAngle", 0, Math.PI).onChange(() => {rearSpotlight.angle = spotlightParams.rearSpotlightAngle;});
 rearSpotlightFolder.add(spotlightParams, "rearSpotlightPenumbra", 0, 2).onChange(() => {rearSpotlight.penumbra = spotlightParams.rearSpotlightPenumbra;});
-rearSpotlightFolder.add(spotlightParams, "rearSpotlightDistance", 1, 50).onChange(() => {rearSpotlight.distance = spotlightParams.rearSpotlightDistance;});
+rearSpotlightFolder.add(spotlightParams, "rearSpotlightDistance", 1, 90).onChange(() => {rearSpotlight.distance = spotlightParams.rearSpotlightDistance;});
 
 ////////// RIGHT SPOTLIGHT GUI
 const rightSpotlightFolder = gui.addFolder("Right Spotlight");
@@ -437,7 +450,7 @@ rightSpotlightFolder.addColor(spotlightParams, "rightSpotlightColor").onChange((
 rightSpotlightFolder.add(spotlightParams, "rightSpotlightIntensity", 0, 50).onChange(() => {rightSpotlight.intensity = spotlightParams.rightSpotlightIntensity;});
 rightSpotlightFolder.add(spotlightParams, "rightSpotlightAngle", 0, Math.PI).onChange(() => {rightSpotlight.angle = spotlightParams.rightSpotlightAngle;});
 rightSpotlightFolder.add(spotlightParams, "rightSpotlightPenumbra", 0, 2).onChange(() => {rightSpotlight.penumbra = spotlightParams.rightSpotlightPenumbra;});
-rightSpotlightFolder.add(spotlightParams, "rightSpotlightDistance", 1, 50).onChange(() => {rightSpotlight.distance = spotlightParams.rightSpotlightDistance;});
+rightSpotlightFolder.add(spotlightParams, "rightSpotlightDistance", 1, 90).onChange(() => {rightSpotlight.distance = spotlightParams.rightSpotlightDistance;});
 
 ////////// LEFT SPOTLIGHT GUI
 const leftSpotlightFolder = gui.addFolder("Left Spotlight");
@@ -445,7 +458,7 @@ leftSpotlightFolder.addColor(spotlightParams, "leftSpotlightColor").onChange(() 
 leftSpotlightFolder.add(spotlightParams, "leftSpotlightIntensity", 0, 50).onChange(() => {leftSpotlight.intensity = spotlightParams.leftSpotlightIntensity;});
 leftSpotlightFolder.add(spotlightParams, "leftSpotlightAngle", 0, Math.PI).onChange(() => {leftSpotlight.angle = spotlightParams.leftSpotlightAngle;});
 leftSpotlightFolder.add(spotlightParams, "leftSpotlightPenumbra", 0, 2).onChange(() => {leftSpotlight.penumbra = spotlightParams.leftSpotlightPenumbra;});
-leftSpotlightFolder.add(spotlightParams, "leftSpotlightDistance", 1, 50).onChange(() => {leftSpotlight.distance = spotlightParams.leftSpotlightDistance;});
+leftSpotlightFolder.add(spotlightParams, "leftSpotlightDistance", 1, 80).onChange(() => {leftSpotlight.distance = spotlightParams.leftSpotlightDistance;});
 
 ////////// DEBUG CAM (DISABLED WHEN AUTO ROTATE IS ENABLED IN THE FUNCTION.)
 const controls = new OrbitControls(camera, canvas);
@@ -461,8 +474,8 @@ camera.position.y = 15;
 ////////// MAIN STUFF //////////
 ////////////////////////////////
 
-const distance = 30; // Distance to model.
-const yOffset = 1.75; // Camera height.
+const distance = 32; // Distance to model.
+const yOffset = 1.6; // Camera height.
 
 function showOnCanvas() {
   stats.begin();
@@ -471,7 +484,7 @@ function showOnCanvas() {
 
   // effectComposer.render();
 
-  angle += 0.001;
+  angle += 0.00075;
   const x = center.x + distance * Math.cos(angle);
   const z = center.z + distance * Math.sin(angle);
   camera.position.set(x, center.y + yOffset, z);
