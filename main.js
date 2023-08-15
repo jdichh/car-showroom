@@ -128,32 +128,32 @@ const parameters = {
 const spotlightParams = {
   topSpotlightColor: WHITE,
   topSpotlightIntensity: 35,
-  topSpotlightAngle: 2.45.toFixed(2),
-  topSpotlightPenumbra: 0.48,
+  topSpotlightAngle: 2.6.toFixed(2),
+  topSpotlightPenumbra: 0.65,
   topSpotlightDistance: 36,
 
   frontSpotlightColor: WHITE,
   frontSpotlightIntensity: 10,
   frontSpotlightAngle: 1.57.toFixed(2),
-  frontSpotlightPenumbra: 0.1,
+  frontSpotlightPenumbra: 0.65,
   frontSpotlightDistance: 36,
 
   rearSpotlightColor: WHITE,
   rearSpotlightIntensity: 10,
   rearSpotlightAngle: 1.57.toFixed(2),
-  rearSpotlightPenumbra: 0.1,
+  rearSpotlightPenumbra: 0.65,
   rearSpotlightDistance: 36,
 
   rightSpotlightColor: WHITE,
   rightSpotlightIntensity: 10,
   rightSpotlightAngle: 1.57.toFixed(2),
-  rightSpotlightPenumbra: 0.1,
+  rightSpotlightPenumbra: 0.65,
   rightSpotlightDistance: 36,
 
   leftSpotlightColor: WHITE,
   leftSpotlightIntensity: 10,
   leftSpotlightAngle: 1.57.toFixed(2),
-  leftSpotlightPenumbra: 0.1,
+  leftSpotlightPenumbra: 0.65,
   leftSpotlightDistance: 36,
 };
 
@@ -166,7 +166,7 @@ car1.castShadow = true;
 car1.receiveShadow = true;
 scene.background = new THREE.Color(0x020202);
 const directionalLight = new THREE.DirectionalLight(0xffffff, DIRECTIONAL_LIGHT_INTENSITY);
-directionalLight.position.set(0, 25, 0);
+directionalLight.position.set(-5, 30, 30);
 scene.add(directionalLight);
 
 directionalLight.castShadow = true;
@@ -184,19 +184,16 @@ const frontSpotlight = new THREE.SpotLight(spotlightParams.frontSpotlightColor, 
 const rearSpotlight = new THREE.SpotLight(spotlightParams.rearSpotlightColor, 90, 15, Math.PI * 0.1,0.25 );
 const rightSpotlight = new THREE.SpotLight( WHITE, 90, 15, Math.PI * 0.1, 0.25);
 const leftSpotlight = new THREE.SpotLight( WHITE, 90, 15, Math.PI * 0.1, 0.25);
-
 ////////// SETTING UP SPOTLIGHT POSITIONS //////////
-const frontOffset = new THREE.Vector3(0, 0, 20); // Front of the car
-const rearOffset = new THREE.Vector3(0, 0, -20); // Rear of the car
-const leftOffset = new THREE.Vector3(-20, 0, 0); // Left of the car
-const rightOffset = new THREE.Vector3(20, 0, 0); // Right of the car
-
+const frontOffset = new THREE.Vector3(0, 0, 25); // Front of the car
+const rearOffset = new THREE.Vector3(0, 0, -25); // Rear of the car
+const leftOffset = new THREE.Vector3(-25, 0, 0); // Left of the car
+const rightOffset = new THREE.Vector3(25, 0, 0); // Right of the car
 ////////// TOP SPOTLIGHT //////////
-
-spotlight.position.set(0, 8, 0);
+spotlight.position.set(0, 10, 0);
 spotlight.target = car1;
 spotlight.castShadow = true;
-spotlight.shadow.bias = -0.0025;
+spotlight.shadow.bias = -0.001; // Fixes shadow artifacts.
 spotlight.shadow.camera.near = 0.1;
 spotlight.shadow.camera.near = 0.1;
 spotlight.shadow.camera.far = 30;
@@ -204,21 +201,7 @@ spotlight.shadow.mapSize.width = 1024;
 spotlight.shadow.mapSize.height = 1024;
 spotlight.intensity;
 scene.add(spotlight);
-
-////////// REAR SPOTLIGHT //////////
-
-rearSpotlight.position.set(-5, 10, -11);
-rearSpotlight.position.copy(car1.position).add(rearOffset);
-rearSpotlight.target = car1;
-rearSpotlight.castShadow = true;
-rearSpotlight.shadow.camera.near = 0.1;
-rearSpotlight.shadow.camera.far = 30;
-rearSpotlight.shadow.mapSize.width = 1024;
-rearSpotlight.shadow.mapSize.height = 1024;
-scene.add(rearSpotlight);
-
 ////////// FRONT SPOTLIGHT //////////
-
 frontSpotlight.position.set(-10, 10, 40);
 frontSpotlight.position.copy(car1.position).add(frontOffset);
 frontSpotlight.target = car1;
@@ -228,9 +211,17 @@ frontSpotlight.shadow.camera.far = 30;
 frontSpotlight.shadow.mapSize.width = 1024;
 frontSpotlight.shadow.mapSize.height = 1024;
 scene.add(frontSpotlight);
-
+////////// REAR SPOTLIGHT //////////
+rearSpotlight.position.set(-5, 10, -11);
+rearSpotlight.position.copy(car1.position).add(rearOffset);
+rearSpotlight.target = car1;
+rearSpotlight.castShadow = true;
+rearSpotlight.shadow.camera.near = 0.1;
+rearSpotlight.shadow.camera.far = 30;
+rearSpotlight.shadow.mapSize.width = 1024;
+rearSpotlight.shadow.mapSize.height = 1024;
+scene.add(rearSpotlight);
 ////////// RIGHT SPOTLIGHT //////////
-
 rightSpotlight.position.copy(car1.position).add(rightOffset);
 rightSpotlight.target.position.copy(car1.position).add(rightOffset).sub(leftOffset);
 rightSpotlight.castShadow = true;
@@ -239,9 +230,7 @@ rightSpotlight.shadow.camera.far = 30;
 rightSpotlight.shadow.mapSize.width = 1024;
 rightSpotlight.shadow.mapSize.height = 1024;
 scene.add(rightSpotlight);
-
 ////////// LEFT SPOTLIGHT //////////
-
 leftSpotlight.position.copy(car1.position).add(leftOffset);
 leftSpotlight.target.position.copy(car1.position).add(leftOffset).sub(rightOffset);
 leftSpotlight.castShadow = true;
@@ -478,7 +467,6 @@ const yOffset = 1.75; // Camera height.
 function showOnCanvas() {
   stats.begin();
   controls.update();
-
   updateDirectionalLight();
 
   // effectComposer.render();
