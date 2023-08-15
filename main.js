@@ -1,8 +1,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "./node_modules/three/examples/jsm/controls/OrbitControls.js";
-import { EffectComposer } from "./node_modules/three/examples/jsm/postprocessing/EffectComposer.js";
-import { SSAOPass } from "./node_modules/three/examples/jsm/postprocessing/SSAOPass.js";
 import { GLTFLoader } from "./node_modules/three/examples/jsm/loaders/GLTFLoader.js";
+import { EffectComposer } from "./node_modules/three/examples/jsm/postprocessing/EffectComposer.js";
+import { ShaderPass } from "./node_modules/three/examples/jsm/postprocessing/ShaderPass.js";
+import { SSAOPass } from "./node_modules/three/examples/jsm/postprocessing/SSAOPass.js";
+
 import { GUI } from "dat.gui";
 import WebGL from "three/addons/capabilities/WebGL.js";
 
@@ -21,6 +23,8 @@ const windowSize = {
   height: window.innerHeight,
 };
 
+const WHITE = "#FFFFFF";
+
 ////////////////////////////////////////
 ////////// PARAMETERS FROM GUI /////////
 ////////////////////////////////////////
@@ -32,35 +36,35 @@ const parameters = {
 };
 
 const spotlightParams = {
-  topSpotlightColor: "#ffffff",
-  topSpotlightIntensity: 35,
-  topSpotlightAngle: 2.4,
-  topSpotlightPenumbra: 0.48,
-  topSpotlightDistance: 36,
+  topSpotlightColor: WHITE,
+  topSpotlightIntensity: 30,
+  topSpotlightAngle: 2.2,
+  topSpotlightPenumbra: 0,
+  topSpotlightDistance: 45,
 
-  frontSpotlightColor: "#ffffff",
-  frontSpotlightIntensity: 10,
-  frontSpotlightAngle: 1.5,
-  frontSpotlightPenumbra: 0.1,
-  frontSpotlightDistance: 36,
-
-  rearSpotlightColor: "#ffffff",
-  rearSpotlightIntensity: 10,
+  rearSpotlightColor: WHITE,
+  rearSpotlightIntensity: 15,
   rearSpotlightAngle: 1.5,
-  rearSpotlightPenumbra: 0.1,
-  rearSpotlightDistance: 36,
+  rearSpotlightPenumbra: 1,
+  rearSpotlightDistance: 23,
 
-  rightSpotlightColor: "#ffffff",
-  rightSpotlightIntensity: 10,
-  rightSpotlightAngle: 1.5,
-  rightSpotlightPenumbra: 0.1,
-  rightSpotlightDistance: 36,
+  frontSpotlightColor: WHITE,
+  frontSpotlightIntensity: 15,
+  frontSpotlightAngle: 1.6,
+  frontSpotlightPenumbra: 1,
+  frontSpotlightDistance: 45,
 
-  leftSpotlightColor: "#ffffff",
-  leftSpotlightIntensity: 10,
-  leftSpotlightAngle: 1.5,
-  leftSpotlightPenumbra: 0.1,
-  leftSpotlightDistance: 36,
+  rightSpotlightColor: WHITE,
+  rightSpotlightIntensity: 15,
+  rightSpotlightAngle: 1.6,
+  rightSpotlightPenumbra: 1,
+  rightSpotlightDistance: 23,
+
+  leftSpotlightColor: WHITE,
+  leftSpotlightIntensity: 15,
+  leftSpotlightAngle: 1.6,
+  leftSpotlightPenumbra: 1,
+  leftSpotlightDistance: 23,
 };
 
 //////////////////////////////////////////////
@@ -69,25 +73,28 @@ const spotlightParams = {
 
 let angle = 0;
 let car1, spotlightProp1, spotlightProp2, spotlightProp3, spotlightProp4;
-const DIRECTIONAL_LIGHT_INTENSITY = 0.03;
+const DIRECTIONAL_LIGHT_INTENSITY = 0.015;
 let center = new THREE.Vector3();
 let loader = new GLTFLoader();
 const textureLoader = new THREE.TextureLoader();
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
-  15,
+  20,
   window.innerWidth / window.innerHeight,
   0.1,
-  1500
+  300
 );
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
-  antialias: true,
-  toneMapping: THREE.LinearSRGBColorSpace,
-  toneMappingExposure: 1.0,
+  antialias: true // MSAA
 });
 renderer.setSize(windowSize.width, windowSize.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ReinhardToneMapping;
+renderer.toneMappingExposure = 1;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.autoUpdate = true;
 
 ////////////////////////////////////
 ////////// FLOOR TEXTURE //////////
@@ -101,7 +108,7 @@ const ROUGHNESS = "./assets/floor/concrete/Concrete033_2K_Roughness.png";
 // const METALNESS = "./assets/floor/metal/Metal046A_2K_Metalness.png";
 const AMBIENT_OCCLUSION =
   "./assets/floor/concrete/Concrete033_2K_AmbientOcclusion.png";
-const TEX_SCALE = 20;
+const TEX_SCALE = 25;
 const PLANE_WIDTH = 400;
 const PLANE_HEIGHT = 400;
 
@@ -169,12 +176,12 @@ scene.add(floor);
 car1 = new THREE.Object3D();
 car1.castShadow = true;
 car1.receiveShadow = true;
-scene.background = new THREE.Color(0x060606);
+scene.background = new THREE.Color(0x050505);
 const directionalLight = new THREE.DirectionalLight(
   0xffffff,
   DIRECTIONAL_LIGHT_INTENSITY
 );
-directionalLight.position.set(11, 9, -3);
+directionalLight.position.set(0, 25, 0);
 scene.add(directionalLight);
 
 floor.receiveShadow = true;
@@ -187,24 +194,8 @@ directionalLight.shadow.camera.top = 50;
 directionalLight.shadow.camera.bottom = -50;
 directionalLight.shadow.mapSize.width = 1024;
 directionalLight.shadow.mapSize.height = 1024;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ReinhardToneMapping;
-renderer.shadowMap.autoUpdate = true;
-
-directionalLight.castShadow = true;
-directionalLight.shadow.camera.near = 10;
-directionalLight.shadow.camera.far = 100;
-directionalLight.shadow.camera.left = -50;
-directionalLight.shadow.camera.right = 50;
-directionalLight.shadow.camera.top = 50;
-directionalLight.shadow.camera.bottom = -50;
-directionalLight.shadow.mapSize.width = 2048;
-directionalLight.shadow.mapSize.height = 2048;
-
-const spotlight = new THREE.SpotLight("#ffffff", 5, 20, Math.PI / 3, 0.2);
+const spotlight = new THREE.SpotLight(WHITE, 5, 20, Math.PI / 3, 0.2);
 const frontSpotlight = new THREE.SpotLight(
   spotlightParams.frontSpotlightColor,
   90,
@@ -220,33 +211,34 @@ const rearSpotlight = new THREE.SpotLight(
   0.25
 );
 const rightSpotlight = new THREE.SpotLight(
-  "#FFFFFF",
+  WHITE,
   90,
   15,
   Math.PI * 0.1,
   0.25
 );
 const leftSpotlight = new THREE.SpotLight(
-  "#FFFFFF",
+  WHITE,
   90,
   15,
   Math.PI * 0.1,
   0.25
 );
-const frontOffset = new THREE.Vector3(0, 0, 30);
-const rearOffset = new THREE.Vector3(0, 0, -30);
-const leftOffset = new THREE.Vector3(-30, 0, 0);
-const rightOffset = new THREE.Vector3(30, 0, 0);
+const frontOffset = new THREE.Vector3(0, 0, 20);
+const rearOffset = new THREE.Vector3(0, 0, -20);
+const leftOffset = new THREE.Vector3(-20, 0, 0);
+const rightOffset = new THREE.Vector3(20, 0, 0);
 
 ////////// TOP SPOTLIGHT //////////
 
-spotlight.position.set(0, 8, 0);
+spotlight.position.set(0, 10, 0);
 spotlight.target = car1;
 spotlight.castShadow = true;
-spotlight.shadow.camera.near = 0.1;
-spotlight.shadow.camera.far = 30;
-spotlight.shadow.mapSize.width = 1024;
-spotlight.shadow.mapSize.height = 1024;
+spotlight.shadow.bias = -0.001;
+spotlight.shadow.camera.near = 1;
+spotlight.shadow.camera.far = 100;
+spotlight.shadow.mapSize.width = 2048;
+spotlight.shadow.mapSize.height = 2048;
 spotlight.intensity;
 scene.add(spotlight);
 
@@ -285,7 +277,7 @@ rightSpotlight.castShadow = true;
 rightSpotlight.shadow.camera.near = 0.1;
 rightSpotlight.shadow.camera.far = 30;
 rightSpotlight.shadow.mapSize.width = 1024;
-rightSpotlight.shadow.mapSize.height = 2048;
+rightSpotlight.shadow.mapSize.height = 1024;
 scene.add(rightSpotlight);
 
 ////////// LEFT SPOTLIGHT //////////
@@ -307,6 +299,8 @@ scene.add(leftSpotlight);
 ////////////////////////////////////
 
 const efxComposer = new EffectComposer(renderer);
+
+//// SSAO
 const ssaoPass = new SSAOPass(scene, camera);
 efxComposer.addPass(ssaoPass);
 ssaoPass.intensity = 0.5;
@@ -316,7 +310,7 @@ ssaoPass.intensity = 0.5;
 /////////////////////////////////
 
 Promise.all([
-  new Promise((resolve) => loader.load("/assets/cars/ghibli.glb", resolve)),
+  new Promise((resolve) => loader.load("/assets/cars/a90_supra.glb", resolve)),
   new Promise((resolve) => loader.load("/assets/props/spotlight.glb", resolve)),
   new Promise((resolve) => loader.load("/assets/props/spotlight.glb", resolve)),
   new Promise((resolve) => loader.load("/assets/props/spotlight.glb", resolve)),
@@ -324,36 +318,41 @@ Promise.all([
 ]).then(([gltf1, gltf2, gltf3, gltf4, gltf5]) => {
   car1 = gltf1.scene;
   car1.position.y = -0.1;
-  // a90 supra, aventador_svj_sc20, revuelto
-  // car1.scale.set(2.5, 2.5, 2.5);
+  
+  // ghibli
+  // car1.scale.set(1.75, 1.75, 1.75);
+
+  // a90 supra
+  car1.scale.set(1.5, 1.5, 1.5)
+
   // r32
   // car1.scale.set(1.325, 1.325, 1.325);
-  // ghibli
-  car1.scale.set(2.25, 2.25, 2.25);
+
   car1.castShadow = true;
   // Setting up shadow according to the car's meshes.
   car1.traverse((child) => {
     if (child.isMesh) {
       child.castShadow = true;
+      child.receiveShadow = true;
     }
   });
 
   // Front of car
   spotlightProp1 = gltf2.scene;
-  spotlightProp1.position.set(0, 0, 29.5)
+  spotlightProp1.position.set(0, 0, 19.5)
   spotlightProp1.rotation.y = 9.4
 
   // Rear of car
   spotlightProp2 = gltf3.scene;
-  spotlightProp2.position.set(0, 0, -29.5)
+  spotlightProp2.position.set(0, 0, -19.5)
 
   // Left of car
   spotlightProp3 = gltf4.scene;
-  spotlightProp3.position.set(-29.5, 0, 0)
+  spotlightProp3.position.set(-19.5, 0, 0)
 
   // Right of car
   spotlightProp4 = gltf5.scene;
-  spotlightProp4.position.set(29.5, 0, 0)
+  spotlightProp4.position.set(19.5, 0, 0)
 
 
   scene.add(car1);
@@ -642,18 +641,18 @@ camera.position.y = 15;
 function showOnCanvas() {
   stats.begin();
   controls.update();
-  
   updateDirectionalLight();
-  // SSAO
+
+  // Postprocessing
   // efxComposer.render();
 
-  angle += 0.001;
-  const distance = 36; // Distance to model.
-  const yOffset = 2.5; // Camera height.
-  const x = center.x + distance * Math.cos(angle);
-  const z = center.z + distance * Math.sin(angle);
-  camera.position.set(x, center.y + yOffset, z);
-  camera.lookAt(center);
+  // angle += 0.0015;
+  // const distance = 20; // Distance to model.
+  // const yOffset = 1; // Camera height.
+  // const x = center.x + distance * Math.cos(angle);
+  // const z = center.z + distance * Math.sin(angle);
+  // camera.position.set(x, center.y + yOffset, z);
+  // camera.lookAt(center);
 
   renderer.render(scene, camera);
   requestAnimationFrame(showOnCanvas);
