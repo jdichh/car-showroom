@@ -58,7 +58,7 @@ renderer.shadowMap.autoUpdate = true;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.4
+renderer.toneMappingExposure = 2
 
 ////////////////////////////////////
 ////////// FLOOR TEXTURE //////////
@@ -260,7 +260,7 @@ ssaoPass.intensity = 0.2;
 
 const loadingSpinner = document.getElementById('loading-spinner');
 Promise.all([
-  new Promise((resolve) => loader.load("/assets/cars/polestar_1_4k.glb", resolve)),
+  new Promise((resolve) => loader.load("/assets/cars/.glb", resolve)),
 ]).then(([gltf1]) => {
   // Car Model Setup
   car1 = gltf1.scene;

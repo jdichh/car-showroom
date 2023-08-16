@@ -1,7 +1,7 @@
 #loading-container {
   position: absolute;
   min-width: 100vw;
-  min-height: 100vh;
+  height: 75vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,10 +25,10 @@
   content: " ";
   display: block;
   position: absolute;
-  top: 18px;
-  left: 35px;
-  width: 2px;
-  height: 5px;
+  top: 19px;
+  left: 39px;
+  width: 2.75px;
+  height: 7px;
   border-radius: 20%;
   background: rgba(255, 255, 255, 0.5);
 }

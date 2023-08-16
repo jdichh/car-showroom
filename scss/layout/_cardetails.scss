@@ -1,19 +1,46 @@
+@use "../global/typography";
+
 #car-details {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100vw;
-  height: 25vh;
+  height: 17.5vh;
   background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(5px);
   text-align: left;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 10px;
+  padding-top: 1rem;
+  column-gap: 1.3rem;
+  padding-inline: 3.7rem;
 }
 
-#left,
-#right {
-  width: 50%; /* Equal width for both sides */
-  text-align: left; /* Align text to the left side */
+#car-details {
+  align-content: start;
+  font-family: "Roboto", sans-serif;
+}
+
+#car-details p {
+  font-size: 21px;
+}
+
+#detail,
+#detail-number {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+  font-size: 1.15rem;
+}
+
+#detail {
+  color: rgba(255, 255, 255, 0.6);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+#detail-number {
+  color: rgba(255, 255, 255, 0.8);
 }
