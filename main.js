@@ -68,7 +68,7 @@ const NORMAL_GL = "./assets/floor/concrete/Concrete033_2K_NormalGL.png";
 const ROUGHNESS = "./assets/floor/concrete/Concrete033_2K_Roughness.png";
 // const METALNESS = "./assets/floor/metal/Metal046A_2K_Metalness.png";
 const AMBIENT_OCCLUSION = "./assets/floor/concrete/Concrete033_2K_AmbientOcclusion.png";
-const TEX_SCALE = 5;
+const TEX_SCALE = 4;
 const PLANE_WIDTH = 60;
 const PLANE_HEIGHT = 60;
 
@@ -131,36 +131,36 @@ const parameters = {
 const spotlightParams = {
   topSpotlightColor: WHITE,
   topSpotlightIntensity: 45,
-  topSpotlightAngle: 2.48.toFixed(2),
+  topSpotlightAngle: 2.64.toFixed(2),
   topSpotlightPenumbra: 0.65,
   topSpotlightDistance: 40,
   topSpotlightX: 0,
-  topSpotlightY: 8.75,
+  topSpotlightY: 8.75.toFixed(2),
   topSpotlightZ: 0,
 
   frontSpotlightColor: WHITE,
   frontSpotlightIntensity: 30,
-  frontSpotlightAngle: 1.6,
+  frontSpotlightAngle: 0.05,
   frontSpotlightPenumbra: 0.65,
-  frontSpotlightDistance: 30,
+  frontSpotlightDistance: 28,
 
   rearSpotlightColor: WHITE,
   rearSpotlightIntensity: 30,
   rearSpotlightAngle: 1.57.toFixed(2),
   rearSpotlightPenumbra: 0.65,
-  rearSpotlightDistance: 31,
+  rearSpotlightDistance: 40,
 
   rightSpotlightColor: WHITE,
   rightSpotlightIntensity: 50,
-  rightSpotlightAngle: 2.5,
+  rightSpotlightAngle: 1,
   rightSpotlightPenumbra: 0.65,
-  rightSpotlightDistance: 30,
+  rightSpotlightDistance: 35,
 
   leftSpotlightColor: WHITE,
   leftSpotlightIntensity: 50,
-  leftSpotlightAngle: 2.5,
+  leftSpotlightAngle: 1,
   leftSpotlightPenumbra: 0.65,
-  leftSpotlightDistance: 30,
+  leftSpotlightDistance: 35,
 };
 
 //////////////////////////////////////////
@@ -175,7 +175,7 @@ const spotlightParams = {
 car1 = new THREE.Object3D();
 car1.castShadow = true;
 car1.receiveShadow = true;
-scene.background = new THREE.Color(0x020202);
+scene.background = new THREE.Color(0x000000);
 const directionalLight = new THREE.DirectionalLight(0xffffff, DIRECTIONAL_LIGHT_INTENSITY);
 directionalLight.position.set(0, 36, 0);
 scene.add(directionalLight);
@@ -201,7 +201,7 @@ const rearOffset = new THREE.Vector3(0, 0, -25); // Rear of the car
 const leftOffset = new THREE.Vector3(-25, 0, 0); // Left of the car
 const rightOffset = new THREE.Vector3(25, 0, 0); // Right of the car
 ////////// TOP SPOTLIGHT //////////
-spotlight.position.set(0, 8.9, 0);
+spotlight.position.set(0, 8.75, 0);
 spotlight.target = car1;
 spotlight.castShadow = true;
 spotlight.shadow.bias = -0.001; // Fixes shadow artifacts.
@@ -215,6 +215,7 @@ frontSpotlight.position.set(-10, 10, 40);
 frontSpotlight.position.copy(car1.position).add(frontOffset);
 frontSpotlight.target = car1;
 frontSpotlight.castShadow = true;
+frontSpotlight.shadow.bias = -0.001; // Fixes shadow artifacts.
 frontSpotlight.shadow.camera.near = 0.1;
 frontSpotlight.shadow.camera.far = 25;
 frontSpotlight.shadow.mapSize.width = 1024;
@@ -360,11 +361,11 @@ spotlight.angle = spotlightParams.topSpotlightAngle;
 spotlight.penumbra = spotlightParams.topSpotlightPenumbra;
 spotlight.distance = spotlightParams.topSpotlightDistance;
 
-frontSpotlight.color.set(spotlightParams.rearSpotlightColor);
-frontSpotlight.intensity = spotlightParams.rearSpotlightIntensity;
-frontSpotlight.angle = spotlightParams.rearSpotlightAngle;
-frontSpotlight.penumbra = spotlightParams.rearSpotlightPenumbra;
-frontSpotlight.distance = spotlightParams.rearSpotlightDistance;
+frontSpotlight.color.set(spotlightParams.frontSpotlightColor);
+frontSpotlight.intensity = spotlightParams.frontSpotlightIntensity;
+frontSpotlight.angle = spotlightParams.frontSpotlightAngle;
+frontSpotlight.penumbra = spotlightParams.frontSpotlightPenumbra;
+frontSpotlight.distance = spotlightParams.frontSpotlightDistance;
 
 rearSpotlight.color.set(spotlightParams.rearSpotlightColor);
 rearSpotlight.intensity = spotlightParams.rearSpotlightIntensity;
@@ -372,17 +373,17 @@ rearSpotlight.angle = spotlightParams.rearSpotlightAngle;
 rearSpotlight.penumbra = spotlightParams.rearSpotlightPenumbra;
 rearSpotlight.distance = spotlightParams.rearSpotlightDistance;
 
-leftSpotlight.color.set(spotlightParams.rearSpotlightColor);
-leftSpotlight.intensity = spotlightParams.rearSpotlightIntensity;
-leftSpotlight.angle = spotlightParams.rearSpotlightAngle;
-leftSpotlight.penumbra = spotlightParams.rearSpotlightPenumbra;
-leftSpotlight.distance = spotlightParams.rearSpotlightDistance;
+leftSpotlight.color.set(spotlightParams.leftSpotlightColor);
+leftSpotlight.intensity = spotlightParams.leftSpotlightIntensity;
+leftSpotlight.angle = spotlightParams.leftSpotlightAngle;
+leftSpotlight.penumbra = spotlightParams.leftSpotlightPenumbra;
+leftSpotlight.distance = spotlightParams.leftSpotlightDistance;
 
-rightSpotlight.color.set(spotlightParams.rearSpotlightColor);
-rightSpotlight.intensity = spotlightParams.rearSpotlightIntensity;
-rightSpotlight.angle = spotlightParams.rearSpotlightAngle;
-rightSpotlight.penumbra = spotlightParams.rearSpotlightPenumbra;
-rightSpotlight.distance = spotlightParams.rearSpotlightDistance;
+rightSpotlight.color.set(spotlightParams.rightSpotlight);
+rightSpotlight.intensity = spotlightParams.rightSpotlightIntensity;
+rightSpotlight.angle = spotlightParams.rightSpotlightAngle;
+rightSpotlight.penumbra = spotlightParams.rightSpotlightPenumbra;
+rightSpotlight.distance = spotlightParams.rightSpotlightDistance;
 
 ///////////////////////////////////////////
 ////////// MAINTAIN ASPECT RATIO //////////
@@ -407,7 +408,7 @@ window.addEventListener("resize", () => {
 like lighting and angles, uncomment the necessary lines 
 */
 
-////////// FPS COUNTER
+//////// FPS COUNTER
 // import Stats from "stats.js";
 // const stats = new Stats();
 // stats.showPanel(0);
@@ -416,7 +417,7 @@ like lighting and angles, uncomment the necessary lines
 // stats.dom.style.left = "0";
 // document.body.appendChild(stats.dom);
 
-// // ////////// DEV.GUI SETUP //////////
+// ////////// DEV.GUI SETUP //////////
 // const gui = new GUI();
 // function updateCameraPosition() {
 //   camera.position.set(
@@ -510,7 +511,7 @@ like lighting and angles, uncomment the necessary lines
 ////////////////////////////////
 
 const distance = 25; // Distance to model.
-const yOffset = 1.2; // Camera height.
+const yOffset = 2.1; // Camera height.
 
 function showOnCanvas() {
   // Devtools (including the stats.end())
@@ -521,7 +522,7 @@ function showOnCanvas() {
   // effectComposer.render(); -> Postprocessing effects.
 
   // Camera rotation.
-  angle += 0.0008;
+  angle += 0.0009;
   const x = center.x + distance * Math.cos(angle);
   const z = center.z + distance * Math.sin(angle);
   camera.position.set(x, center.y + yOffset, z);
