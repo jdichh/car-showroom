@@ -148,7 +148,7 @@ const spotlightParams = {
   rearSpotlightIntensity: 30,
   rearSpotlightAngle: 1.57.toFixed(2),
   rearSpotlightPenumbra: 0.65,
-  rearSpotlightDistance: 28,
+  rearSpotlightDistance: 31,
 
   rightSpotlightColor: WHITE,
   rightSpotlightIntensity: 50,
