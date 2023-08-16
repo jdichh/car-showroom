@@ -1,0 +1,35 @@
+@use '../global/typography';
+
+.main {
+    pointer-events: none;
+}
+
+#logo {
+    position: absolute;
+    top: 14vh;
+    left: 3.25vw;
+    padding: 0;
+}
+
+img {
+    height: 30px;
+    width: 180px;
+}
+
+#car {
+    position: absolute;
+    top: 30vh;
+    left: 6vw;
+    padding: 0;
+}
+
+#manufacturer {
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 1.8rem;
+    line-height: 1.05;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+h1 {
+    font-size: 6.3rem;
+}

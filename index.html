@@ -1,86 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="compiled-scss/style.css">
-  <title>Gran Turismo-esque Showroom</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="compiled-scss/style.css" />
+    <title>Gran Turismo-esque Showroom</title>
+  </head>
+  <body>
+    <div class="main">
+      <div id="loading-container">
+        <div id="loading-spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
 
-  <div id="loading-container">
-    <div id="loading-spinner">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </div>
+      <div id="top">
+          <img src="./assets/gt_logo.png" alt="Gran Turismo logo" />
+          <div id="name">
+            <p>Made by Jason Dichoso. <br>
+              Made with Three.js and lots of coffee.
+            </p>
+          </div>
+      </div>
 
-  <div id="car-details">
-    <div id="detail">
-      <p>Displacement</p>
-      <div id="detail-number">
-        <p>2998cc</p>
+      <div id="logo">
+        <img src="./assets/logo.png" alt="Toyota logo" />
       </div>
-    </div>
-    <div id="detail">
-      <p>Max. Power</p>
-      <div id="detail-number">
-        <p>2998cc</p>
+
+      <div id="car">
+        <div id="manufacturer">
+          <h2>TOYOTA</h2>
+          <h1>GR SUPRA RZ</h1>
+          <h2>2020</h2>
+        </div>
       </div>
-    </div>
-    <div id="detail">
-      <p>Max. Torque</p>
-      <div id="detail-number">
-        <p>2998cc</p>
+
+      <div id="car-details">
+        <div id="detail">
+          <p>Displacement</p>
+          <div id="detail-number">
+            <p>2998 cc</p>
+          </div>
+        </div>
+        <div id="detail">
+          <p>Max. Power</p>
+          <div id="detail-number">
+            <p>382 BHP @ 5,800 rpm</p>
+          </div>
+        </div>
+        <div id="detail">
+          <p>Max. Torque</p>
+          <div id="detail-number">
+            <p>51.0 kgfm @ 2,000 rpm</p>
+          </div>
+        </div>
+        <div id="detail">
+          <p>Drivetrain</p>
+          <div id="detail-number">
+            <p>FR</p>
+          </div>
+        </div>
+        <div id="detail">
+          <p>Length</p>
+          <div id="detail-number">
+            <p>4,380 mm</p>
+          </div>
+        </div>
+        <div id="detail">
+          <p>Width</p>
+          <div id="detail-number">
+            <p>1,865 mm</p>
+          </div>
+        </div>
+        <div id="detail">
+          <p>Height</p>
+          <div id="detail-number">
+            <p>1,295 mm</p>
+          </div>
+        </div>
+        <div id="detail">
+          <p>Weight</p>
+          <div id="detail-number">
+            <p>1,530 kg</p>
+          </div>
+        </div>
       </div>
-    </div>
-    <div id="detail">
-      <p>Drivetrain</p>
-      <div id="detail-number">
-        <p>2998cc</p>
+
+      <div id="car-class">
+        <p>N400</p>
       </div>
-    </div>
-    <div id="detail">
-      <p>Length</p>
-      <div id="detail-number">
-        <p>2998cc</p>
-      </div>
-    </div>
-    <div id="detail">
-      <p>Width</p>
-      <div id="detail-number">
-        <p>2998cc</p>
-      </div>
-    </div>
-    <div id="detail">
-      <p>Height</p>
-      <div id="detail-number">
-        <p>2998cc</p>
-      </div>
-    </div>
-    <div id="detail">
-      <p>Weight</p>
-      <div id="detail-number">
-        <p>2998cc</p>
+
+      <div id="car-price">
+        <p><span class="currency">Cr.</span> 100,000</p>
       </div>
     </div>
 
+    <canvas class="webGL"></canvas>
+    <script type="module" src="main.js" defer></script>
 
-  </div>
-
-  <canvas class="webGL"></canvas>
-  <div class="menu">
-  </div>
-  <script type="module" src="main.js" defer></script>
-</body>
+    <!-- <script>
+      document.addEventListener("contextmenu", function (event) {
+        event.preventDefault();
+      });
+    </script> -->
+  </body>
 </html>
