@@ -21,7 +21,7 @@ if (!WebGL.isWebGLAvailable()) {
 ////////// INITIAL SETUP //////////
 ///////////////////////////////////
 
-export const canvas = document.querySelector(".webGL");
+const canvas = document.querySelector(".webGL");
 const windowSize = {
   width: window.innerWidth,
   height: window.innerHeight,
@@ -34,7 +34,7 @@ const windowSize = {
 let angle = 0;
 let car1;
 
-const DIRECTIONAL_LIGHT_INTENSITY = 0.02;
+const DIRECTIONAL_LIGHT_INTENSITY = 0.003;
 const spotlightProps = []; 
 const WHITE = "#FFFFFF";
 
@@ -61,7 +61,7 @@ renderer.shadowMap.autoUpdate = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.85
+renderer.toneMappingExposure = 0.95
 
 ////////////////////////////////////
 ////////// FLOOR TEXTURE //////////
@@ -73,7 +73,7 @@ const NORMAL_GL = "./assets/floor/concrete1k/Concrete042A_1K_NormalGL.png";
 const ROUGHNESS = "./assets/floor/concrete1k/Concrete042A_1K_Roughness.png";
 const METALNESS = "./assets/floor/concrete1k/Concrete042A_1K_Metalness.png";
 const AMBIENT_OCCLUSION = "./assets/floor/concrete1k/Concrete042A_1K_AmbientOcclusion.png";
-const TEX_SCALE = 4;
+const TEX_SCALE = 5;
 const PLANE_WIDTH = 60;
 const PLANE_HEIGHT = 60;
 
@@ -114,7 +114,7 @@ Promise.all([
   const material = new THREE.MeshStandardMaterial({
     map: floorTexture,
     displacementMap: dispMap,
-    displacementScale: 0.6,
+    displacementScale: 0.1,
     normalMap: normalGL,
     normalMapType: THREE.TangentSpaceNormalMap,
     roughnessMap: roughnessTexture,
@@ -145,7 +145,7 @@ const parameters = {
 const spotlightParams = {
   topSpotlightColor: WHITE,
   topSpotlightIntensity: 50,
-  topSpotlightAngle: 2.2.toFixed(2),
+  topSpotlightAngle: 2.26.toFixed(2),
   topSpotlightPenumbra: 1.24,
   topSpotlightDistance: 40,
   topSpotlightX: 0,
@@ -153,25 +153,25 @@ const spotlightParams = {
   topSpotlightZ: 0,
 
   frontSpotlightColor: WHITE,
-  frontSpotlightIntensity: 15,
+  frontSpotlightIntensity: 35,
   frontSpotlightAngle: 1,
   frontSpotlightPenumbra: 0.65,
-  frontSpotlightDistance: 33,
+  frontSpotlightDistance: 36,
 
   rearSpotlightColor: WHITE,
-  rearSpotlightIntensity: 25,
+  rearSpotlightIntensity: 35,
   rearSpotlightAngle: 1.55.toFixed(2),
   rearSpotlightPenumbra: 0.65,
   rearSpotlightDistance: 45,
 
   rightSpotlightColor: WHITE,
-  rightSpotlightIntensity: 25,
+  rightSpotlightIntensity: 35,
   rightSpotlightAngle: 1,
   rightSpotlightPenumbra: 0.65,
   rightSpotlightDistance: 35,
 
   leftSpotlightColor: WHITE,
-  leftSpotlightIntensity: 25,
+  leftSpotlightIntensity: 35,
   leftSpotlightAngle: 1,
   leftSpotlightPenumbra: 0.65,
   leftSpotlightDistance: 35,
@@ -291,7 +291,7 @@ Promise.all([
   car1 = gltf1.scene;
 
   // Default setting
-  car1.position.y = -0.2;
+  car1.position.y = -0.75;
 
   // Toyota Supra scale
   car1.scale.set(1.5, 1.5, 1.5);
@@ -330,25 +330,25 @@ Promise.all([
 ]).then(([gltf2, gltf3, gltf4, gltf5]) => {
   // Front of car
   spotlightProps[0] = gltf2.scene;
-  spotlightProps[0].position.set(2.5, -0.20, 26);
+  spotlightProps[0].position.set(2.5, -0.82, 25.45);
   spotlightProps[0].rotation.y = 9.425;
   spotlightProps[0].rotation.x = -1.5;
 
   // Rear of car
   spotlightProps[1] = gltf3.scene;
-  spotlightProps[1].position.set(-2.5, -0.20, -26);
+  spotlightProps[1].position.set(-2.5, -0.82, -25.95);
   spotlightProps[1].rotation.x = 1.5;
 
   // Left of car
   spotlightProps[2] = gltf4.scene;
-  spotlightProps[2].position.set(-26.025, -0.06, -2.55);
+  spotlightProps[2].position.set(-25.5, -0.66, -2.33);
   spotlightProps[2].rotation.y = 3.15;
   spotlightProps[2].rotation.x = 1.57;
   spotlightProps[2].rotation.z = 1.575;
 
   // Right of car
   spotlightProps[3] = gltf5.scene;
-  spotlightProps[3].position.set(26.025, -0.14, -2.55);
+  spotlightProps[3].position.set(26.25, -0.73, -2.33);
  
   spotlightProps[3].rotation.x = 1.57;
   spotlightProps[3].rotation.z = 1.575;
@@ -619,8 +619,8 @@ like lighting and angles, uncomment the necessary lines
 ////////// MAIN STUFF //////////
 ////////////////////////////////
 
-const distance = 22.5; // Distance to model.
-const yOffset = 1; // Camera height.
+const distance = 25; // Distance to model.
+const yOffset = 3; // Camera height.
 
 function showOnCanvas() {
   // Devtools (including the stats.end())
@@ -632,7 +632,7 @@ function showOnCanvas() {
   // effectComposer.render();
 
   // Camera rotation.
-  angle += 0.0009;
+  angle += 0.00125;
   const x = center.x + distance * Math.cos(angle);
   const z = center.z + distance * Math.sin(angle);
   camera.position.set(x, center.y + yOffset, z);
