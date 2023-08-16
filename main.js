@@ -510,7 +510,7 @@ like lighting and angles, uncomment the necessary lines
 ////////////////////////////////
 
 const distance = 25; // Distance to model.
-const yOffset = 1.5; // Camera height.
+const yOffset = 1.2; // Camera height.
 
 function showOnCanvas() {
   // Devtools (including the stats.end())
