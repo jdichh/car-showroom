@@ -292,8 +292,8 @@ img {
 
 #manufacturer {
   font-family: "Fjalla One", sans-serif;
-  font-size: 1.6rem;
-  line-height: 1.05;
+  font-size: 1.4rem;
+  line-height: 1.1;
   color: rgba(255, 255, 255, 0.4);
 }
 
@@ -321,7 +321,7 @@ h1 {
 
 #name {
   position: absolute;
-  top: 1.5vh;
+  top: 1.8vh;
   right: 1.5rem;
   font-family: "Poppins", sans-serif;
   text-align: right;
@@ -330,4 +330,81 @@ h1 {
 #name p {
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.6);
+}
+
+#slider {
+  position: absolute;
+  bottom: 3vh;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: "Poppins", sans-serif;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+#slider .text {
+  font-size: 1.1rem;
+  display: inline-block;
+  animation: slide 135s linear infinite;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(35%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+#music-toggle-button {
+  position: absolute;
+  top: 2vh;
+  right: 48.5vw;
+  padding: 0.6rem 1.3rem;
+  background: rgba(32, 32, 32, 0.5);
+  cursor: pointer;
+  color: rgb(220, 220, 220);
+  border: none;
+  outline: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#music-toggle-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgb(220, 220, 220);
+  outline: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+#volume-up-button {
+  position: absolute;
+  top: 2vh;
+  right: 44vw;
+  padding: 1.3rem;
+  background: rgba(32, 32, 32, 0.5);
+  cursor: pointer;
+  color: rgb(220, 220, 220);
+  border: none;
+  outline: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#volume-up-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgb(220, 220, 220);
+  outline: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+#volume-down-button {
+  position: absolute;
+  top: 2vh;
+  right: 53vw;
+  padding: 1.3rem;
+  background: rgba(32, 32, 32, 0.5);
+  cursor: pointer;
+  color: rgb(220, 220, 220);
+  border: none;
+  outline: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#volume-down-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgb(220, 220, 220);
+  outline: 1px solid rgba(255, 255, 255, 0.8);
 }/*# sourceMappingURL=style.css.map */

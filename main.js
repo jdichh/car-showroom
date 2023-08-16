@@ -1,10 +1,15 @@
 import * as THREE from "three";
-import { OrbitControls } from "./node_modules/three/examples/jsm/controls/OrbitControls.js";
+// Model loader
+import { GLTFLoader } from "./node_modules/three/examples/jsm/loaders/GLTFLoader.js";
+// Post processing stuff
 import { EffectComposer } from "./node_modules/three/examples/jsm/postprocessing/EffectComposer.js";
 import { ShaderPass } from "./node_modules/three/examples/jsm/postprocessing/ShaderPass.js";
 import { SSAOPass } from "./node_modules/three/examples/jsm/postprocessing/SSAOPass.js";
-import { GLTFLoader } from "./node_modules/three/examples/jsm/loaders/GLTFLoader.js";
+// Devtools
+import { OrbitControls } from "./node_modules/three/examples/jsm/controls/OrbitControls.js";
 import { GUI } from "dat.gui";
+
+
 import WebGL from "three/addons/capabilities/WebGL.js";
 
 if (!WebGL.isWebGLAvailable()) {
@@ -16,7 +21,7 @@ if (!WebGL.isWebGLAvailable()) {
 ////////// INITIAL SETUP //////////
 ///////////////////////////////////
 
-const canvas = document.querySelector(".webGL");
+export const canvas = document.querySelector(".webGL");
 const windowSize = {
   width: window.innerWidth,
   height: window.innerHeight,
@@ -53,21 +58,21 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 ///// Moving these inside the render variable causes shadows and tonemapping not to work.
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.autoUpdate = true;
-renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.5
+renderer.toneMappingExposure = 1.85
 
 ////////////////////////////////////
 ////////// FLOOR TEXTURE //////////
 ///////////////////////////////////
 
-const FLOOR_TEX = "./assets/floor/concrete/Concrete033_2K_Color.png";
-const DISPLACEMENT_MAP = "./assets/floor/concrete/Concrete033_2K_Displacement.png";
-const NORMAL_GL = "./assets/floor/concrete/Concrete033_2K_NormalGL.png";
-const ROUGHNESS = "./assets/floor/concrete/Concrete033_2K_Roughness.png";
-// const METALNESS = "./assets/floor/metal/Metal046A_2K_Metalness.png";
-const AMBIENT_OCCLUSION = "./assets/floor/concrete/Concrete033_2K_AmbientOcclusion.png";
+const FLOOR_TEX = "./assets/floor/concrete1k/Concrete042A_1K_Color.png";
+const DISPLACEMENT_MAP = "./assets/floor/concrete1k/Concrete042A_1K_Displacement.png";
+const NORMAL_GL = "./assets/floor/concrete1k/Concrete042A_1K_NormalGL.png";
+const ROUGHNESS = "./assets/floor/concrete1k/Concrete042A_1K_Roughness.png";
+const METALNESS = "./assets/floor/concrete1k/Concrete042A_1K_Metalness.png";
+const AMBIENT_OCCLUSION = "./assets/floor/concrete1k/Concrete042A_1K_AmbientOcclusion.png";
 const TEX_SCALE = 4;
 const PLANE_WIDTH = 60;
 const PLANE_HEIGHT = 60;
@@ -76,9 +81,11 @@ Promise.all([
   textureLoader.load(FLOOR_TEX),
   textureLoader.load(DISPLACEMENT_MAP),
   textureLoader.load(ROUGHNESS),
+  textureLoader.load(METALNESS),
   textureLoader.load(AMBIENT_OCCLUSION),
   textureLoader.load(NORMAL_GL),
-]).then(([floorTexture, dispMap, rough, amb_occ, normalGL]) => {
+]).then(([floorTexture, dispMap, roughnessTexture, metalnessTexture, amb_occ, normalGL]) => {
+
   floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
   const floorTextureScale = TEX_SCALE;
   floorTexture.repeat.set(floorTextureScale, floorTextureScale);
@@ -87,9 +94,13 @@ Promise.all([
   const dispMapScale = TEX_SCALE;
   dispMap.repeat.set(dispMapScale, dispMapScale);
 
-  rough.wrapS = rough.wrapT = THREE.RepeatWrapping;
+  roughnessTexture.wrapS = roughnessTexture.wrapT = THREE.RepeatWrapping;
   const roughScale = TEX_SCALE;
-  rough.repeat.set(roughScale, roughScale);
+  roughnessTexture.repeat.set(roughScale, roughScale);
+
+  metalnessTexture.wrapS = metalnessTexture.wrapT = THREE.RepeatWrapping;
+  const metalScale = TEX_SCALE;
+  metalnessTexture.repeat.set(metalScale, metalScale);
 
   amb_occ.wrapS = amb_occ.wrapT = THREE.RepeatWrapping;
   const amb_occScale = TEX_SCALE;
@@ -98,17 +109,20 @@ Promise.all([
   normalGL.wrapS = normalGL.wrapT = THREE.RepeatWrapping;
   const normalGLScale = TEX_SCALE;
   normalGL.repeat.set(normalGLScale, normalGLScale);
+
   const geometry = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);
   const material = new THREE.MeshStandardMaterial({
     map: floorTexture,
     displacementMap: dispMap,
-    displacementScale: 1,
+    displacementScale: 0.6,
     normalMap: normalGL,
     normalMapType: THREE.TangentSpaceNormalMap,
-    roughnessMap: rough,
-    roughness: 0.9,
+    roughnessMap: roughnessTexture,
+    roughness: 1,
     aoMap: amb_occ,
     aoMapIntensity: 1,
+    metalnessMap: metalnessTexture,
+    metalness: 1,
   });
 
   const floor = new THREE.Mesh(geometry, material);
@@ -130,34 +144,34 @@ const parameters = {
 
 const spotlightParams = {
   topSpotlightColor: WHITE,
-  topSpotlightIntensity: 45,
-  topSpotlightAngle: 2.64.toFixed(2),
-  topSpotlightPenumbra: 0.65,
+  topSpotlightIntensity: 50,
+  topSpotlightAngle: 2.2.toFixed(2),
+  topSpotlightPenumbra: 1.24,
   topSpotlightDistance: 40,
   topSpotlightX: 0,
-  topSpotlightY: 8.75.toFixed(2),
+  topSpotlightY: 8.6,
   topSpotlightZ: 0,
 
   frontSpotlightColor: WHITE,
-  frontSpotlightIntensity: 30,
-  frontSpotlightAngle: 0.05,
+  frontSpotlightIntensity: 15,
+  frontSpotlightAngle: 1,
   frontSpotlightPenumbra: 0.65,
-  frontSpotlightDistance: 28,
+  frontSpotlightDistance: 33,
 
   rearSpotlightColor: WHITE,
-  rearSpotlightIntensity: 30,
-  rearSpotlightAngle: 1.57.toFixed(2),
+  rearSpotlightIntensity: 25,
+  rearSpotlightAngle: 1.55.toFixed(2),
   rearSpotlightPenumbra: 0.65,
-  rearSpotlightDistance: 40,
+  rearSpotlightDistance: 45,
 
   rightSpotlightColor: WHITE,
-  rightSpotlightIntensity: 50,
+  rightSpotlightIntensity: 25,
   rightSpotlightAngle: 1,
   rightSpotlightPenumbra: 0.65,
   rightSpotlightDistance: 35,
 
   leftSpotlightColor: WHITE,
-  leftSpotlightIntensity: 50,
+  leftSpotlightIntensity: 25,
   leftSpotlightAngle: 1,
   leftSpotlightPenumbra: 0.65,
   leftSpotlightDistance: 35,
@@ -187,8 +201,8 @@ directionalLight.shadow.camera.left = -50;
 directionalLight.shadow.camera.right = 50;
 directionalLight.shadow.camera.top = 50;
 directionalLight.shadow.camera.bottom = -50;
-directionalLight.shadow.mapSize.width = 1024;
-directionalLight.shadow.mapSize.height = 1024;
+directionalLight.shadow.mapSize.width = 512;
+directionalLight.shadow.mapSize.height = 512;
 
 const spotlight = new THREE.SpotLight(WHITE, 5, 20, Math.PI / 3, 0.2);
 const frontSpotlight = new THREE.SpotLight(spotlightParams.frontSpotlightColor, 90, 20, Math.PI * 0.1, 0.25);
@@ -201,14 +215,14 @@ const rearOffset = new THREE.Vector3(0, 0, -25); // Rear of the car
 const leftOffset = new THREE.Vector3(-25, 0, 0); // Left of the car
 const rightOffset = new THREE.Vector3(25, 0, 0); // Right of the car
 ////////// TOP SPOTLIGHT //////////
-spotlight.position.set(0, 8.75, 0);
+spotlight.position.set(0, 8.6, 0);
 spotlight.target = car1;
 spotlight.castShadow = true;
 spotlight.shadow.bias = -0.001; // Fixes shadow artifacts.
 spotlight.shadow.camera.near = 0.1;
 spotlight.shadow.camera.far = 30;
-spotlight.shadow.mapSize.width = 1024;
-spotlight.shadow.mapSize.height = 1024;
+spotlight.shadow.mapSize.width = 2048;
+spotlight.shadow.mapSize.height = 2048;
 scene.add(spotlight);
 ////////// FRONT SPOTLIGHT //////////
 frontSpotlight.position.set(-10, 10, 40);
@@ -277,14 +291,10 @@ Promise.all([
   car1 = gltf1.scene;
 
   // Default setting
-  car1.position.y = -0.1;
+  car1.position.y = -0.2;
 
   // Toyota Supra scale
   car1.scale.set(1.5, 1.5, 1.5);
-
-  // Challenger scale & position
-  // car1.position.y = -0.2;
-  // car1.scale.set(0.625, 0.625, 0.625);
 
   // Maserati Ghibli, Polestar 1 scale
   // car1.scale.set(1.75, 1.75, 1.75);
@@ -347,9 +357,8 @@ Promise.all([
   for (const spotlightProp of spotlightProps) {
     scene.add(spotlightProp);
   }
-  showOnCanvas();
-});
 
+});
 
 ////////////////////////////////////
 ////////// APPLY SETTINGS //////////
@@ -400,6 +409,106 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
 });
 
+///////////////////////////
+////////// MUSIC //////////
+///////////////////////////
+const musicFiles = [
+  "./assets/music/music1.mp3",
+  "./assets/music/music2.mp3",
+  "./assets/music/music3.mp3",
+  "./assets/music/music4.mp3",
+  "./assets/music/music5.mp3",
+  "./assets/music/music6.mp3",
+  "./assets/music/music7.mp3",
+];
+
+const preloadedMusicFiles = musicFiles.map((musicFile) => {
+  const audio = new Audio();
+  audio.src = musicFile;
+  audio.preload = "auto";
+  audio.volume = 0.2;
+  audio.addEventListener("error", (event) => {
+    console.error("Error loading audio:", event);
+  });
+  return audio;
+});
+
+let currentMusicIndex;
+let MUSIC;
+let isMusicPlaying = true;
+
+const musicToggleButton = document.createElement("button");
+musicToggleButton.setAttribute("id", "music-toggle-button");
+musicToggleButton.addEventListener("click", toggleMusic);
+
+const iconElement = document.createElement("i");
+iconElement.classList.add("fas", "fa-stop", "fa-sm");
+musicToggleButton.appendChild(iconElement);
+
+const volumeUpButton = document.createElement("button");
+volumeUpButton.setAttribute("id", "volume-up-button");
+volumeUpButton.classList.add("fas", "fa-plus", "fa-sm");
+volumeUpButton.addEventListener("click", increaseVolume);
+
+const volumeDownButton = document.createElement("button");
+volumeDownButton.setAttribute("id", "volume-down-button");
+volumeDownButton.classList.add("fas", "fa-minus", "fa-sm");
+volumeDownButton.addEventListener("click", decreaseVolume);
+
+canvas.parentNode.appendChild(musicToggleButton);
+canvas.parentNode.appendChild(volumeUpButton);
+canvas.parentNode.appendChild(volumeDownButton);
+
+function increaseVolume() {
+  if (MUSIC.volume < 1) {
+    MUSIC.volume += 0.1;
+  }
+}
+
+function decreaseVolume() {
+  if (MUSIC.volume > 0) {
+    MUSIC.volume -= 0.1;
+  }
+}
+
+function toggleMusic() {
+  if (isMusicPlaying) {
+    MUSIC.pause();
+    iconElement.classList.remove("fas", "fa-play", "fa-sm");
+    iconElement.classList.add("fas", "fa-stop", "fa-sm");
+  } else {
+    playNextTrack()
+    MUSIC.play();
+    iconElement.classList.remove("fas", "fa-stop", "fa-sm");
+    iconElement.classList.add("fas", "fa-play", "fa-sm");
+  }
+  isMusicPlaying = !isMusicPlaying;
+}
+
+function playNextTrack() {
+  const previousMusicIndex = currentMusicIndex;
+  do {
+    currentMusicIndex = Math.floor(Math.random() * musicFiles.length);
+  } while (currentMusicIndex === previousMusicIndex);
+
+  MUSIC = preloadedMusicFiles[currentMusicIndex];
+  MUSIC.currentTime = 0;
+  //   MUSIC.playbackRate = 3.5; // For testing if music will proceed to the next one, and to check if looping works.
+  MUSIC.removeEventListener("ended", playNextTrack);
+  MUSIC.addEventListener("ended", playNextTrack);
+
+  if (isMusicPlaying) {
+    MUSIC.play();
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  currentMusicIndex = Math.floor(Math.random() * musicFiles.length);
+  MUSIC = preloadedMusicFiles[currentMusicIndex];
+  MUSIC.loop = true;
+  playNextTrack();
+});
+
 ///////////////////////////////////
 ////////// DEVTOOLS AREA //////////
 ///////////////////////////////////
@@ -408,7 +517,7 @@ window.addEventListener("resize", () => {
 like lighting and angles, uncomment the necessary lines 
 */
 
-//////// FPS COUNTER
+// //////// FPS COUNTER
 // import Stats from "stats.js";
 // const stats = new Stats();
 // stats.showPanel(0);
@@ -459,7 +568,7 @@ like lighting and angles, uncomment the necessary lines
 // topSpotlightFolder.add(spotlightParams, "topSpotlightIntensity", 0, 50).onChange(() => {spotlight.intensity = spotlightParams.topSpotlightIntensity;});
 // topSpotlightFolder.add(spotlightParams, "topSpotlightAngle", 0, Math.PI).onChange(() => {spotlight.angle = spotlightParams.topSpotlightAngle;});
 // topSpotlightFolder.add(spotlightParams, "topSpotlightPenumbra", 0, 2).onChange(() => {spotlight.penumbra = spotlightParams.topSpotlightPenumbra;});
-// topSpotlightFolder.add(spotlightParams, "topSpotlightDistance", 1, 90).onChange(() => {spotlight.distance = spotlightParams.topSpotlightDistance;});
+// topSpotlightFolder.add(spotlightParams, "topSpotlightDistance", 1, 50).onChange(() => {spotlight.distance = spotlightParams.topSpotlightDistance;});
 // topSpotlightFolder.add(spotlightParams, "topSpotlightX", -50, 50).onChange(() => {spotlight.position.x = spotlightParams.topSpotlightX;});
 // topSpotlightFolder.add(spotlightParams, "topSpotlightY", -50, 50).onChange(() => {spotlight.position.y = spotlightParams.topSpotlightY;});
 // topSpotlightFolder.add(spotlightParams, "topSpotlightZ", -50, 50).onChange(() => {spotlight.position.z = spotlightParams.topSpotlightZ;});
@@ -470,7 +579,7 @@ like lighting and angles, uncomment the necessary lines
 // frontSpotlightFolder.add(spotlightParams, "frontSpotlightIntensity", 0, 50).onChange(() => {frontSpotlight.intensity = spotlightParams.frontSpotlightIntensity;});
 // frontSpotlightFolder.add(spotlightParams, "frontSpotlightAngle", 0, Math.PI).onChange(() => {frontSpotlight.angle = spotlightParams.frontSpotlightAngle;});
 // frontSpotlightFolder.add(spotlightParams, "frontSpotlightPenumbra", 0, 2).onChange(() => {frontSpotlight.penumbra = spotlightParams.frontSpotlightPenumbra;});
-// frontSpotlightFolder.add(spotlightParams, "frontSpotlightDistance", 1, 90).onChange(() => {frontSpotlight.distance = spotlightParams.frontSpotlightDistance;});
+// frontSpotlightFolder.add(spotlightParams, "frontSpotlightDistance", 1, 50).onChange(() => {frontSpotlight.distance = spotlightParams.frontSpotlightDistance;});
 
 // ////////// REAR SPOTLIGHT GUI
 // const rearSpotlightFolder = gui.addFolder("Rear Spotlight");
@@ -478,7 +587,7 @@ like lighting and angles, uncomment the necessary lines
 // rearSpotlightFolder.add(spotlightParams, "rearSpotlightIntensity", 0, 50).onChange(() => {rearSpotlight.intensity = spotlightParams.rearSpotlightIntensity;});
 // rearSpotlightFolder.add(spotlightParams, "rearSpotlightAngle", 0, Math.PI).onChange(() => {rearSpotlight.angle = spotlightParams.rearSpotlightAngle;});
 // rearSpotlightFolder.add(spotlightParams, "rearSpotlightPenumbra", 0, 2).onChange(() => {rearSpotlight.penumbra = spotlightParams.rearSpotlightPenumbra;});
-// rearSpotlightFolder.add(spotlightParams, "rearSpotlightDistance", 1, 90).onChange(() => {rearSpotlight.distance = spotlightParams.rearSpotlightDistance;});
+// rearSpotlightFolder.add(spotlightParams, "rearSpotlightDistance", 1, 50).onChange(() => {rearSpotlight.distance = spotlightParams.rearSpotlightDistance;});
 
 // ////////// RIGHT SPOTLIGHT GUI
 // const rightSpotlightFolder = gui.addFolder("Right Spotlight");
@@ -486,7 +595,7 @@ like lighting and angles, uncomment the necessary lines
 // rightSpotlightFolder.add(spotlightParams, "rightSpotlightIntensity", 0, 50).onChange(() => {rightSpotlight.intensity = spotlightParams.rightSpotlightIntensity;});
 // rightSpotlightFolder.add(spotlightParams, "rightSpotlightAngle", 0, Math.PI).onChange(() => {rightSpotlight.angle = spotlightParams.rightSpotlightAngle;});
 // rightSpotlightFolder.add(spotlightParams, "rightSpotlightPenumbra", 0, 2).onChange(() => {rightSpotlight.penumbra = spotlightParams.rightSpotlightPenumbra;});
-// rightSpotlightFolder.add(spotlightParams, "rightSpotlightDistance", 1, 90).onChange(() => {rightSpotlight.distance = spotlightParams.rightSpotlightDistance;});
+// rightSpotlightFolder.add(spotlightParams, "rightSpotlightDistance", 1, 50).onChange(() => {rightSpotlight.distance = spotlightParams.rightSpotlightDistance;});
 
 // ////////// LEFT SPOTLIGHT GUI
 // const leftSpotlightFolder = gui.addFolder("Left Spotlight");
@@ -494,9 +603,9 @@ like lighting and angles, uncomment the necessary lines
 // leftSpotlightFolder.add(spotlightParams, "leftSpotlightIntensity", 0, 50).onChange(() => {leftSpotlight.intensity = spotlightParams.leftSpotlightIntensity;});
 // leftSpotlightFolder.add(spotlightParams, "leftSpotlightAngle", 0, Math.PI).onChange(() => {leftSpotlight.angle = spotlightParams.leftSpotlightAngle;});
 // leftSpotlightFolder.add(spotlightParams, "leftSpotlightPenumbra", 0, 2).onChange(() => {leftSpotlight.penumbra = spotlightParams.leftSpotlightPenumbra;});
-// leftSpotlightFolder.add(spotlightParams, "leftSpotlightDistance", 1, 80).onChange(() => {leftSpotlight.distance = spotlightParams.leftSpotlightDistance;});
+// leftSpotlightFolder.add(spotlightParams, "leftSpotlightDistance", 1, 50).onChange(() => {leftSpotlight.distance = spotlightParams.leftSpotlightDistance;});
 
-// //////// DEBUG CAM (DISABLED WHEN AUTO ROTATE IS ENABLED IN THE FUNCTION.)
+// // //////// DEBUG CAM (DISABLED WHEN AUTO ROTATE IS ENABLED IN THE FUNCTION.)
 // const controls = new OrbitControls(camera, canvas);
 // controls.enableDamping = true;
 // camera.position.z = 55;
@@ -510,8 +619,8 @@ like lighting and angles, uncomment the necessary lines
 ////////// MAIN STUFF //////////
 ////////////////////////////////
 
-const distance = 25; // Distance to model.
-const yOffset = 2.1; // Camera height.
+const distance = 22.5; // Distance to model.
+const yOffset = 1; // Camera height.
 
 function showOnCanvas() {
   // Devtools (including the stats.end())
@@ -519,7 +628,8 @@ function showOnCanvas() {
   // controls.update();
   // updateDirectionalLight();
 
-  // effectComposer.render(); -> Postprocessing effects.
+  // Post processing
+  // effectComposer.render();
 
   // Camera rotation.
   angle += 0.0009;

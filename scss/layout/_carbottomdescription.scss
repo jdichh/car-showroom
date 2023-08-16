@@ -1,0 +1,25 @@
+@use '../global/typography';
+
+#slider {
+    position: absolute;
+    bottom: 3vh;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: 'Poppins', sans-serif;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+#slider .text {
+    font-size: 1.1rem;
+    display: inline-block;
+    animation: slide 135s linear infinite;
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(35%);
+    }
+    100% {
+      transform: translateX(-100%); 
+    }
+  }

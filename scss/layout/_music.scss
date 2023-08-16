@@ -1,0 +1,54 @@
+#music-toggle-button {
+    position: absolute;
+    top: 2vh;
+    right: 48.5vw;
+    padding: 0.6rem 1.3rem;
+    background: rgba(32,32,32, 0.5);
+    cursor: pointer;
+    color: rgb(220, 220, 220);
+    border: none;
+    outline: 1px solid rgba(255,255,255, 0.2);
+  }
+  
+#music-toggle-button:hover {
+    background: rgba(255,255,255, 0.15);
+    color: rgb(220, 220, 220);
+    outline: 1px solid rgba(255,255,255, 0.8);
+}
+ 
+#volume-up-button {
+    position: absolute;
+    top: 2vh;
+    right: 44vw;
+    padding: 1.3rem;
+    background: rgba(32,32,32, 0.5);
+    cursor: pointer;
+    color: rgb(220, 220, 220);
+    border: none;
+    outline: 1px solid rgba(255,255,255, 0.2);
+  }
+  
+#volume-up-button:hover {
+    background: rgba(255,255,255, 0.15);
+    color: rgb(220, 220, 220);
+    outline: 1px solid rgba(255,255,255, 0.8);
+}
+  
+#volume-down-button {
+    position: absolute;
+    top: 2vh;
+    right: 53vw;
+    padding: 1.3rem;
+    background: rgba(32,32,32, 0.5);
+    cursor: pointer;
+    color: rgb(220, 220, 220);
+    border: none;
+    outline: 1px solid rgba(255,255,255, 0.2);
+  }
+  
+#volume-down-button:hover {
+    background: rgba(255,255,255, 0.15);
+    color: rgb(220, 220, 220);
+    outline: 1px solid rgba(255,255,255, 0.8);
+}
+  
