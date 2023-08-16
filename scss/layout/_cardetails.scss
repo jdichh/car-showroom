@@ -1,0 +1,19 @@
+#car-details {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 25vh;
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  text-align: left;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 10px;
+}
+
+#left,
+#right {
+  width: 50%; /* Equal width for both sides */
+  text-align: left; /* Align text to the left side */
+}

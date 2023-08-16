@@ -2,7 +2,10 @@ import * as THREE from "three";
 import { OrbitControls } from "./node_modules/three/examples/jsm/controls/OrbitControls.js";
 import { EffectComposer } from "./node_modules/three/examples/jsm/postprocessing/EffectComposer.js";
 import { SSAOPass } from "./node_modules/three/examples/jsm/postprocessing/SSAOPass.js";
-import { GLTFLoader } from "./node_modules/three/examples/jsm/loaders/GLTFLoader.js";
+import { FXAAShader } from "./node_modules/three/examples/jsm/shaders/FXAAShader.js";
+import { GLTFLoader } from "./node_modules/three/examples/jsm/loaders/GLTFLoader.js"; 
+import { OBJLoader } from "./node_modules/three/examples/jsm/loaders/OBJLoader.js";
+import { MTLLoader } from "./node_modules/three/examples/jsm/loaders/MTLLoader.js";
 import { GUI } from "dat.gui";
 import WebGL from "three/addons/capabilities/WebGL.js";
 
@@ -32,7 +35,7 @@ const spotlightProps = [];
 const WHITE = "#FFFFFF";
 
 let center = new THREE.Vector3();
-let loader = new GLTFLoader();
+const loader = new GLTFLoader();
 const textureLoader = new THREE.TextureLoader();
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -43,17 +46,19 @@ const camera = new THREE.PerspectiveCamera(
 );
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
-  // MSAA
   antialias: true, 
 });
 renderer.setSize(windowSize.width, windowSize.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 ///// Moving these inside the render variable causes shadows and tonemapping not to work.
+// renderer.antialias = FXAAShader; // Removing this will cause MSAA to take over the job (Default is MSAA).
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.autoUpdate = true;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ReinhardToneMapping;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.4
 
 ////////////////////////////////////
 ////////// FLOOR TEXTURE //////////
@@ -65,9 +70,9 @@ const NORMAL_GL = "./assets/floor/concrete/Concrete033_2K_NormalGL.png";
 const ROUGHNESS = "./assets/floor/concrete/Concrete033_2K_Roughness.png";
 // const METALNESS = "./assets/floor/metal/Metal046A_2K_Metalness.png";
 const AMBIENT_OCCLUSION = "./assets/floor/concrete/Concrete033_2K_AmbientOcclusion.png";
-const TEX_SCALE = 15;
-const PLANE_WIDTH = 100;
-const PLANE_HEIGHT = 100;
+const TEX_SCALE = 10;
+const PLANE_WIDTH = 60;
+const PLANE_HEIGHT = 60;
 
 Promise.all([
   textureLoader.load(FLOOR_TEX),
@@ -103,7 +108,7 @@ Promise.all([
     normalMap: normalGL,
     normalMapType: THREE.TangentSpaceNormalMap,
     roughnessMap: rough,
-    roughness: 1,
+    roughness: 0.8,
     aoMap: amb_occ,
     aoMapIntensity: 1,
   });
@@ -253,20 +258,20 @@ ssaoPass.intensity = 0.2;
 ////////// LOAD MODELS //////////
 /////////////////////////////////
 
+const loadingSpinner = document.getElementById('loading-spinner');
 Promise.all([
-  new Promise((resolve) => loader.load("/assets/cars/toy_sup_red.glb", resolve)),
+  new Promise((resolve) => loader.load("/assets/cars/polestar_1_4k.glb", resolve)),
 ]).then(([gltf1]) => {
   // Car Model Setup
   car1 = gltf1.scene;
   car1.position.y = -0.1;
 
-  // Supra scale
-  car1.scale.set(1.5, 1.5, 1.5);
+  // Supra -> https://sketchfab.com/3d-models/toyota-gr-supra-9231f2d5e71a43dd87603dc0b339d99d
+  // (can't use it, too many polygons and vertices, massive fps drops for me.)
+  // car1.scale.set(1.5, 1.5, 1.5);
 
-  // Ghibli scale
-  // car1.scale.set(1.75, 1.75, 1.75);
-
-
+  // Ghibli, polestar scale
+  car1.scale.set(1.75, 1.75, 1.75);
   car1.castShadow = true;
 
   // Setting up shadow according to the car's meshes.
@@ -278,6 +283,10 @@ Promise.all([
   });
 
   scene.add(car1);
+  
+  loadingSpinner.style.display = 'none';
+  canvas.style.display = 'block';
+
   showOnCanvas();
 }).catch((error) => {
   console.error("Error loading car model:", error);
@@ -384,7 +393,7 @@ stats.dom.style.top = "0";
 stats.dom.style.left = "0";
 document.body.appendChild(stats.dom);
 
-////////// DEV.GUI SETUP //////////
+// ////////// DEV.GUI SETUP //////////
 const gui = new GUI();
 function updateCameraPosition() {
   camera.position.set(
@@ -460,7 +469,7 @@ leftSpotlightFolder.add(spotlightParams, "leftSpotlightAngle", 0, Math.PI).onCha
 leftSpotlightFolder.add(spotlightParams, "leftSpotlightPenumbra", 0, 2).onChange(() => {leftSpotlight.penumbra = spotlightParams.leftSpotlightPenumbra;});
 leftSpotlightFolder.add(spotlightParams, "leftSpotlightDistance", 1, 80).onChange(() => {leftSpotlight.distance = spotlightParams.leftSpotlightDistance;});
 
-////////// DEBUG CAM (DISABLED WHEN AUTO ROTATE IS ENABLED IN THE FUNCTION.)
+//////// DEBUG CAM (DISABLED WHEN AUTO ROTATE IS ENABLED IN THE FUNCTION.)
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 camera.position.z = 55;
@@ -474,16 +483,17 @@ camera.position.y = 15;
 ////////// MAIN STUFF //////////
 ////////////////////////////////
 
-const distance = 32; // Distance to model.
+const distance = 25; // Distance to model.
 const yOffset = 1.6; // Camera height.
 
 function showOnCanvas() {
   stats.begin();
   controls.update();
   updateDirectionalLight();
-
+  
   // effectComposer.render();
 
+  // Camera rotation.
   angle += 0.00075;
   const x = center.x + distance * Math.cos(angle);
   const z = center.z + distance * Math.sin(angle);

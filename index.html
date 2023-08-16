@@ -3,15 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>Showroom</title>
+  <link rel="stylesheet" href="compiled-scss/style.css">
+  <title>Gran Turismo-esque Showroom</title>
 </head>
 <body>
+
+  <div id="loading-container">
+    <div id="loading-spinner">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
+  <div id="car-details">
+    <div id="left">
+      <p>Displacement</p>
+    </div>
+    <div id="right">
+      <p>2998cc</p>
+    </div>
+  </div>
+
   <canvas class="webGL"></canvas>
   <div class="menu">
-    <h1>2021</h1>
-    <h2>TOYOTA</h2>
-    <h3>GR SUPRA</h3>
   </div>
   <script type="module" src="main.js" defer></script>
 </body>
