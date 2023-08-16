@@ -159,7 +159,7 @@ const spotlightParams = {
   frontSpotlightDistance: 36,
 
   rearSpotlightColor: WHITE,
-  rearSpotlightIntensity: 35,
+  rearSpotlightIntensity: 45,
   rearSpotlightAngle: 1.55.toFixed(2),
   rearSpotlightPenumbra: 0.65,
   rearSpotlightDistance: 45,
@@ -632,7 +632,7 @@ function showOnCanvas() {
   // effectComposer.render();
 
   // Camera rotation.
-  angle += 0.00125;
+  angle += 0.0012;
   const x = center.x + distance * Math.cos(angle);
   const z = center.z + distance * Math.sin(angle);
   camera.position.set(x, center.y + yOffset, z);
