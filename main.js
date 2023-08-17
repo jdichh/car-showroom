@@ -34,7 +34,7 @@ const windowSize = {
 let angle = 0;
 let car1;
 
-const DIRECTIONAL_LIGHT_INTENSITY = 0.003;
+const DIRECTIONAL_LIGHT_INTENSITY = 0.075;
 const spotlightProps = []; 
 const WHITE = "#FFFFFF";
 
@@ -61,7 +61,7 @@ renderer.shadowMap.autoUpdate = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.95
+renderer.toneMappingExposure = 1.25
 
 ////////////////////////////////////
 ////////// FLOOR TEXTURE //////////
@@ -73,9 +73,9 @@ const NORMAL_GL = "./assets/floor/concrete1k/Concrete042A_1K_NormalGL.png";
 const ROUGHNESS = "./assets/floor/concrete1k/Concrete042A_1K_Roughness.png";
 const METALNESS = "./assets/floor/concrete1k/Concrete042A_1K_Metalness.png";
 const AMBIENT_OCCLUSION = "./assets/floor/concrete1k/Concrete042A_1K_AmbientOcclusion.png";
-const TEX_SCALE = 5;
-const PLANE_WIDTH = 60;
-const PLANE_HEIGHT = 60;
+const TEX_SCALE = 30;
+const PLANE_WIDTH = 250;
+const PLANE_HEIGHT = 250;
 
 Promise.all([
   textureLoader.load(FLOOR_TEX),
@@ -111,7 +111,7 @@ Promise.all([
   normalGL.repeat.set(normalGLScale, normalGLScale);
 
   const geometry = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);
-  const material = new THREE.MeshStandardMaterial({
+  const material = new THREE.MeshPhongMaterial({
     map: floorTexture,
     displacementMap: dispMap,
     displacementScale: 0.1,
@@ -145,36 +145,36 @@ const parameters = {
 const spotlightParams = {
   topSpotlightColor: WHITE,
   topSpotlightIntensity: 50,
-  topSpotlightAngle: 2.26.toFixed(2),
+  topSpotlightAngle: 2.43.toFixed(2),
   topSpotlightPenumbra: 1.24,
-  topSpotlightDistance: 40,
+  topSpotlightDistance: 50,
   topSpotlightX: 0,
-  topSpotlightY: 8.6,
+  topSpotlightY: 9,
   topSpotlightZ: 0,
 
   frontSpotlightColor: WHITE,
-  frontSpotlightIntensity: 35,
+  frontSpotlightIntensity: 40,
   frontSpotlightAngle: 1,
-  frontSpotlightPenumbra: 0.65,
-  frontSpotlightDistance: 36,
+  frontSpotlightPenumbra: 1,
+  frontSpotlightDistance: 40,
 
   rearSpotlightColor: WHITE,
   rearSpotlightIntensity: 45,
-  rearSpotlightAngle: 1.55.toFixed(2),
+  rearSpotlightAngle: 1,
   rearSpotlightPenumbra: 0.65,
-  rearSpotlightDistance: 45,
+  rearSpotlightDistance: 40,
 
   rightSpotlightColor: WHITE,
-  rightSpotlightIntensity: 35,
+  rightSpotlightIntensity: 40,
   rightSpotlightAngle: 1,
-  rightSpotlightPenumbra: 0.65,
-  rightSpotlightDistance: 35,
+  rightSpotlightPenumbra: 1,
+  rightSpotlightDistance: 40,
 
   leftSpotlightColor: WHITE,
-  leftSpotlightIntensity: 35,
+  leftSpotlightIntensity: 40,
   leftSpotlightAngle: 1,
-  leftSpotlightPenumbra: 0.65,
-  leftSpotlightDistance: 35,
+  leftSpotlightPenumbra: 1,
+  leftSpotlightDistance: 40,
 };
 
 //////////////////////////////////////////
@@ -189,7 +189,7 @@ const spotlightParams = {
 car1 = new THREE.Object3D();
 car1.castShadow = true;
 car1.receiveShadow = true;
-scene.background = new THREE.Color(0x000000);
+scene.background = new THREE.Color(0x0B0A0A);
 const directionalLight = new THREE.DirectionalLight(0xffffff, DIRECTIONAL_LIGHT_INTENSITY);
 directionalLight.position.set(0, 36, 0);
 scene.add(directionalLight);
@@ -210,12 +210,12 @@ const rearSpotlight = new THREE.SpotLight(spotlightParams.rearSpotlightColor, 90
 const rightSpotlight = new THREE.SpotLight(spotlightParams.rearSpotlightColor, 90, 20, Math.PI * 0.1, 0.25);
 const leftSpotlight = new THREE.SpotLight(spotlightParams.rearSpotlightColor, 90, 200, Math.PI * 0.1, 0.25);
 ////////// SETTING UP SPOTLIGHT POSITIONS //////////
-const frontOffset = new THREE.Vector3(0, 0, 25); // Front of the car
-const rearOffset = new THREE.Vector3(0, 0, -25); // Rear of the car
-const leftOffset = new THREE.Vector3(-25, 0, 0); // Left of the car
-const rightOffset = new THREE.Vector3(25, 0, 0); // Right of the car
+const frontOffset = new THREE.Vector3(0, 0, 18); // Front of the car
+const rearOffset = new THREE.Vector3(0, 0, -18); // Rear of the car
+const leftOffset = new THREE.Vector3(-18, 0, 0); // Left of the car
+const rightOffset = new THREE.Vector3(18, 0, 0); // Right of the car
 ////////// TOP SPOTLIGHT //////////
-spotlight.position.set(0, 8.6, 0);
+spotlight.position.set(0, 9, 0);
 spotlight.target = car1;
 spotlight.castShadow = true;
 spotlight.shadow.bias = -0.001; // Fixes shadow artifacts.
@@ -240,7 +240,8 @@ rearSpotlight.position.set(-5, 10, -11);
 rearSpotlight.position.copy(car1.position).add(rearOffset);
 rearSpotlight.target = car1;
 rearSpotlight.castShadow = true;
-rearSpotlight.shadow.camera.near = 0.1;
+rearSpotlight.shadow.camera.near = 0.
+frontSpotlight.shadow.bias = -0.001; // Fixes shadow artifacts.1;
 rearSpotlight.shadow.camera.far = 25;
 rearSpotlight.shadow.mapSize.width = 1024;
 rearSpotlight.shadow.mapSize.height = 1024;
@@ -259,7 +260,7 @@ scene.add(rightSpotlight);
 leftSpotlight.position.copy(car1.position).add(leftOffset);
 leftSpotlight.target.position.copy(car1.position).add(leftOffset).sub(rightOffset);
 leftSpotlight.castShadow = true;
-leftSpotlight.shadow.bias = -0.001; // Fixes shadow artifacts.
+leftSpotlight.shadow.bias = -0.002; // Fixes shadow artifacts.
 leftSpotlight.shadow.camera.near = 5;
 leftSpotlight.shadow.camera.far = 25;
 leftSpotlight.shadow.mapSize.width = 1024;
@@ -330,25 +331,25 @@ Promise.all([
 ]).then(([gltf2, gltf3, gltf4, gltf5]) => {
   // Front of car
   spotlightProps[0] = gltf2.scene;
-  spotlightProps[0].position.set(2.5, -0.82, 25.45);
+  spotlightProps[0].position.set(2.45, -0.8, 18.5);
   spotlightProps[0].rotation.y = 9.425;
   spotlightProps[0].rotation.x = -1.5;
 
   // Rear of car
   spotlightProps[1] = gltf3.scene;
-  spotlightProps[1].position.set(-2.5, -0.82, -25.95);
+  spotlightProps[1].position.set(-2.5, -0.8, -18.5);
   spotlightProps[1].rotation.x = 1.5;
 
   // Left of car
   spotlightProps[2] = gltf4.scene;
-  spotlightProps[2].position.set(-25.5, -0.66, -2.33);
+  spotlightProps[2].position.set(-18.5, -0.66, -2.45);
   spotlightProps[2].rotation.y = 3.15;
   spotlightProps[2].rotation.x = 1.57;
   spotlightProps[2].rotation.z = 1.575;
 
   // Right of car
   spotlightProps[3] = gltf5.scene;
-  spotlightProps[3].position.set(26.25, -0.73, -2.33);
+  spotlightProps[3].position.set(18.5, -0.73, -2.45);
  
   spotlightProps[3].rotation.x = 1.57;
   spotlightProps[3].rotation.z = 1.575;
@@ -619,8 +620,8 @@ like lighting and angles, uncomment the necessary lines
 ////////// MAIN STUFF //////////
 ////////////////////////////////
 
-const distance = 25; // Distance to model.
-const yOffset = 3; // Camera height.
+const distance = 27.5; // Distance to model.
+const yOffset = 2.5; // Camera height.
 
 function showOnCanvas() {
   // Devtools (including the stats.end())
@@ -632,7 +633,7 @@ function showOnCanvas() {
   // effectComposer.render();
 
   // Camera rotation.
-  angle += 0.0012;
+  angle += 0.0011;
   const x = center.x + distance * Math.cos(angle);
   const z = center.z + distance * Math.sin(angle);
   camera.position.set(x, center.y + yOffset, z);
