@@ -286,9 +286,9 @@ Promise.all([
   // Maserati Ghibli, Polestar 1 scale
   // car1.scale.set(1.75, 1.75, 1.75);
 
-  // BMW M3 E30 scale & position
+  // NFSMW M3 scale & position
   // car1.position.z = -0.1;
-  // car1.scale.set(1.75, 1.75, 1.75);
+  // car1.scale.set(2,2,2);
 
   // Setting up shadow according to the car's meshes.
   car1.castShadow = true;

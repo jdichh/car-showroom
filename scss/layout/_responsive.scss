@@ -1,0 +1,127 @@
+@media (min-width: 1921px) {
+  #car-details {
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  }
+}
+
+@media (max-width: 1766px) {
+  #loading-container {
+    height: 75vh;
+  }
+
+  #car-details {
+    height: 25vh;
+  }
+
+  #car-price {
+    bottom: 25vh;
+  }
+
+  #car-class {
+    bottom: 36vh;
+  }
+
+  #top {
+    height: 9vh;
+  }
+}
+
+@media (max-width: 1350px) {
+  #loading-container {
+    height: 71vh;
+  }
+
+  #car-details {
+    height: 29vh;
+  }
+
+  #car-class {
+    bottom: 40vh;
+    right: 4vw;
+  }
+
+  #car-price {
+    bottom: 31vh;
+    right: 4vw;
+  }
+
+  #top {
+    height: 9vh;
+  }
+}
+
+@media (max-width: 934px) {
+  #manufacturer {
+    font-size: 1rem;
+    h1 {
+      font-size: 5.9rem;
+    }
+  }
+
+  #loading-container {
+    height: 52vh;
+  }
+
+  #car {
+    top: 26.5vh;
+  }
+
+  #car-details {
+    height: 48vh;
+    backdrop-filter: blur(1px);
+  }
+
+  #car-class {
+    bottom: 58vh;
+    right: 6vw;
+  }
+
+  #car-price {
+    bottom: 49vh;
+    right: 6vw;
+  }
+
+  #top {
+    height: 9vh;
+  }
+}
+
+@media (max-width: 656px) {
+  #car {
+    top: 24vh;
+  }
+
+  #manufacturer {
+    font-size: 0.8rem;
+    h1 {
+      font-size: 5.3rem;
+    }
+  }
+
+  #name {
+    top: 3.5vh;
+  }
+
+  #name p {
+    font-size: 0.8rem;
+  }
+
+  #car-class {
+    right: 10vw;
+  }
+
+  #car-price {
+    right: 10vw;
+  }
+}
+
+@media (max-width: 558px) {
+  #name {
+    top: 3vh;
+    width: 26%;
+  }
+
+  #name p {
+    font-size: 0.8rem;
+  }
+}

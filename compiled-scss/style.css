@@ -314,15 +314,17 @@ h1 {
 }
 
 #top img {
-  margin: 1.23rem;
-  width: 60px;
-  height: 50px;
+  position: absolute;
+  top: 2.5vh;
+  left: 2vw;
+  width: 55px;
+  height: 45px;
 }
 
 #name {
   position: absolute;
-  top: 1.8vh;
-  right: 1.5rem;
+  top: 3.5vh;
+  right: 2vw;
   font-family: "Poppins", sans-serif;
   text-align: right;
 }
@@ -355,56 +357,143 @@ h1 {
     transform: translateX(-100%);
   }
 }
-#music-toggle-button {
-  position: absolute;
-  top: 2vh;
-  right: 48.5vw;
-  padding: 0.6rem 1.3rem;
+#music-toggle-button,
+#volume-up-button,
+#volume-down-button {
+  display: inline-block;
   background: rgba(32, 32, 32, 0.5);
   cursor: pointer;
   color: rgb(220, 220, 220);
   border: none;
   outline: 1px solid rgba(255, 255, 255, 0.2);
+  position: absolute;
+  top: 2.5vh;
+  left: 50vw;
+  transform: translateX(-50%);
 }
 
-#music-toggle-button:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: rgb(220, 220, 220);
-  outline: 1px solid rgba(255, 255, 255, 0.8);
+#music-toggle-button {
+  padding: 0.52rem 1.25rem;
 }
 
 #volume-up-button {
-  position: absolute;
-  top: 2vh;
-  right: 44vw;
-  padding: 1.3rem;
-  background: rgba(32, 32, 32, 0.5);
-  cursor: pointer;
-  color: rgb(220, 220, 220);
-  border: none;
-  outline: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-#volume-up-button:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: rgb(220, 220, 220);
-  outline: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 1.25rem 1.25rem;
+  left: calc(50% + 5rem);
 }
 
 #volume-down-button {
-  position: absolute;
-  top: 2vh;
-  right: 53vw;
-  padding: 1.3rem;
-  background: rgba(32, 32, 32, 0.5);
-  cursor: pointer;
-  color: rgb(220, 220, 220);
-  border: none;
-  outline: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1.25rem 1.25rem;
+  left: calc(50% - 5rem);
 }
 
+#music-toggle-button:hover,
+#volume-up-button:hover,
 #volume-down-button:hover {
   background: rgba(255, 255, 255, 0.15);
   color: rgb(220, 220, 220);
   outline: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+@media (min-width: 1921px) {
+  #car-details {
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  }
+}
+@media (max-width: 1766px) {
+  #loading-container {
+    height: 75vh;
+  }
+  #car-details {
+    height: 25vh;
+  }
+  #car-price {
+    bottom: 25vh;
+  }
+  #car-class {
+    bottom: 36vh;
+  }
+  #top {
+    height: 9vh;
+  }
+}
+@media (max-width: 1350px) {
+  #loading-container {
+    height: 71vh;
+  }
+  #car-details {
+    height: 29vh;
+  }
+  #car-class {
+    bottom: 40vh;
+    right: 4vw;
+  }
+  #car-price {
+    bottom: 31vh;
+    right: 4vw;
+  }
+  #top {
+    height: 9vh;
+  }
+}
+@media (max-width: 934px) {
+  #manufacturer {
+    font-size: 1rem;
+  }
+  #manufacturer h1 {
+    font-size: 5.9rem;
+  }
+  #loading-container {
+    height: 52vh;
+  }
+  #car {
+    top: 26.5vh;
+  }
+  #car-details {
+    height: 48vh;
+    -webkit-backdrop-filter: blur(1px);
+            backdrop-filter: blur(1px);
+  }
+  #car-class {
+    bottom: 58vh;
+    right: 6vw;
+  }
+  #car-price {
+    bottom: 49vh;
+    right: 6vw;
+  }
+  #top {
+    height: 9vh;
+  }
+}
+@media (max-width: 656px) {
+  #car {
+    top: 24vh;
+  }
+  #manufacturer {
+    font-size: 0.8rem;
+  }
+  #manufacturer h1 {
+    font-size: 5.3rem;
+  }
+  #name {
+    top: 3.5vh;
+  }
+  #name p {
+    font-size: 0.8rem;
+  }
+  #car-class {
+    right: 10vw;
+  }
+  #car-price {
+    right: 10vw;
+  }
+}
+@media (max-width: 558px) {
+  #name {
+    top: 3vh;
+    width: 26%;
+  }
+  #name p {
+    font-size: 0.8rem;
+  }
 }/*# sourceMappingURL=style.css.map */
