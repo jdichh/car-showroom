@@ -6,14 +6,14 @@
     width: 100vw;
     height: 8vh;
     background-color: rgba(255, 255, 255, 0.025);
-    backdrop-filter: blur(7px);
+    backdrop-filter: blur(5px);
     box-sizing: border-box;
     padding-right: 1px;
 }
 
 #top img {
     position: absolute;
-    top: 2.5vh;
+    top: 2vh;
     left: 2vw;
     width: 55px;
     height: 45px;
@@ -21,7 +21,7 @@
 
 #name {
     position: absolute;
-    top: 3.5vh;
+    top: 2.75vh;
     right: 2vw;
     font-family: 'Poppins', sans-serif;
     text-align: right;
