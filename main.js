@@ -70,8 +70,6 @@ renderer.toneMappingExposure = 1.25
 const FLOOR_TEX = "./assets/floor/concrete1k/Concrete042A_1K_Color.png";
 const DISPLACEMENT_MAP = "./assets/floor/concrete1k/Concrete042A_1K_Displacement.png";
 const NORMAL_GL = "./assets/floor/concrete1k/Concrete042A_1K_NormalGL.png";
-const ROUGHNESS = "./assets/floor/concrete1k/Concrete042A_1K_Roughness.png";
-const METALNESS = "./assets/floor/concrete1k/Concrete042A_1K_Metalness.png";
 const AMBIENT_OCCLUSION = "./assets/floor/concrete1k/Concrete042A_1K_AmbientOcclusion.png";
 const TEX_SCALE = 30;
 const PLANE_WIDTH = 250;
@@ -80,11 +78,11 @@ const PLANE_HEIGHT = 250;
 Promise.all([
   textureLoader.load(FLOOR_TEX),
   textureLoader.load(DISPLACEMENT_MAP),
-  textureLoader.load(ROUGHNESS),
-  textureLoader.load(METALNESS),
+  // textureLoader.load(ROUGHNESS),
+  // textureLoader.load(METALNESS),
   textureLoader.load(AMBIENT_OCCLUSION),
   textureLoader.load(NORMAL_GL),
-]).then(([floorTexture, dispMap, roughnessTexture, metalnessTexture, amb_occ, normalGL]) => {
+]).then(([floorTexture, dispMap, amb_occ, normalGL]) => {
 
   floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
   const floorTextureScale = TEX_SCALE;
@@ -93,14 +91,6 @@ Promise.all([
   dispMap.wrapS = dispMap.wrapT = THREE.RepeatWrapping;
   const dispMapScale = TEX_SCALE;
   dispMap.repeat.set(dispMapScale, dispMapScale);
-
-  roughnessTexture.wrapS = roughnessTexture.wrapT = THREE.RepeatWrapping;
-  const roughScale = TEX_SCALE;
-  roughnessTexture.repeat.set(roughScale, roughScale);
-
-  metalnessTexture.wrapS = metalnessTexture.wrapT = THREE.RepeatWrapping;
-  const metalScale = TEX_SCALE;
-  metalnessTexture.repeat.set(metalScale, metalScale);
 
   amb_occ.wrapS = amb_occ.wrapT = THREE.RepeatWrapping;
   const amb_occScale = TEX_SCALE;
@@ -117,12 +107,8 @@ Promise.all([
     displacementScale: 0.1,
     normalMap: normalGL,
     normalMapType: THREE.TangentSpaceNormalMap,
-    roughnessMap: roughnessTexture,
-    roughness: 1,
     aoMap: amb_occ,
     aoMapIntensity: 1,
-    metalnessMap: metalnessTexture,
-    metalness: 1,
   });
 
   const floor = new THREE.Mesh(geometry, material);
