@@ -1,15 +1,5 @@
 import * as THREE from "three";
-// Model loader
 import { GLTFLoader } from "./node_modules/three/examples/jsm/loaders/GLTFLoader.js";
-// Post processing stuff
-import { EffectComposer } from "./node_modules/three/examples/jsm/postprocessing/EffectComposer.js";
-import { ShaderPass } from "./node_modules/three/examples/jsm/postprocessing/ShaderPass.js";
-import { SSAOPass } from "./node_modules/three/examples/jsm/postprocessing/SSAOPass.js";
-// Devtools
-import { OrbitControls } from "./node_modules/three/examples/jsm/controls/OrbitControls.js";
-import { GUI } from "dat.gui";
-
-
 import WebGL from "three/addons/capabilities/WebGL.js";
 
 if (!WebGL.isWebGLAvailable()) {
@@ -46,10 +36,11 @@ const camera = new THREE.PerspectiveCamera(
   15,
   window.innerWidth / window.innerHeight,
   0.1,
-  1500
+  250
 );
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
+  context: canvas.getContext('webgl2'),
   antialias: true, 
 });
 renderer.setSize(windowSize.width, windowSize.height);
@@ -58,7 +49,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 ///// Moving these inside the render variable causes shadows and tonemapping not to work.
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.autoUpdate = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type = THREE.PCFShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.25
@@ -71,15 +62,13 @@ const FLOOR_TEX = "./assets/floor/concrete1k/Concrete042A_1K_Color.png";
 const DISPLACEMENT_MAP = "./assets/floor/concrete1k/Concrete042A_1K_Displacement.png";
 const NORMAL_GL = "./assets/floor/concrete1k/Concrete042A_1K_NormalGL.png";
 const AMBIENT_OCCLUSION = "./assets/floor/concrete1k/Concrete042A_1K_AmbientOcclusion.png";
-const TEX_SCALE = 30;
-const PLANE_WIDTH = 250;
-const PLANE_HEIGHT = 250;
+const TEX_SCALE = 15;
+const PLANE_WIDTH = 225;
+const PLANE_HEIGHT = 225;
 
 Promise.all([
   textureLoader.load(FLOOR_TEX),
   textureLoader.load(DISPLACEMENT_MAP),
-  // textureLoader.load(ROUGHNESS),
-  // textureLoader.load(METALNESS),
   textureLoader.load(AMBIENT_OCCLUSION),
   textureLoader.load(NORMAL_GL),
 ]).then(([floorTexture, dispMap, amb_occ, normalGL]) => {
@@ -101,7 +90,7 @@ Promise.all([
   normalGL.repeat.set(normalGLScale, normalGLScale);
 
   const geometry = new THREE.PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT);
-  const material = new THREE.MeshPhongMaterial({
+  const material = new THREE.MeshLambertMaterial({
     map: floorTexture,
     displacementMap: dispMap,
     displacementScale: 0.1,
@@ -119,19 +108,13 @@ Promise.all([
 });
 
 ////////////////////////////////////////
-////////// PARAMETERS FROM GUI /////////
+////////// PARAMETERS TO APPLY /////////
 ////////////////////////////////////////
-
-const parameters = {
-  cameraPositionX: 15,
-  cameraPositionY: 10,
-  cameraPositionZ: 15,
-};
 
 const spotlightParams = {
   topSpotlightColor: WHITE,
   topSpotlightIntensity: 50,
-  topSpotlightAngle: 2.43.toFixed(2),
+  topSpotlightAngle: 2.7,
   topSpotlightPenumbra: 1.24,
   topSpotlightDistance: 50,
   topSpotlightX: 0,
@@ -170,6 +153,8 @@ const spotlightParams = {
  To whoever wants to try this out for themselves,
  if you're experiencing shadow artifacting (blurred shadowy lines),
  play around with the shadow bias.
+
+ NOTE: Will turn these into functions to minify code.
 */
 
 car1 = new THREE.Object3D();
@@ -207,8 +192,8 @@ spotlight.castShadow = true;
 spotlight.shadow.bias = -0.001; // Fixes shadow artifacts.
 spotlight.shadow.camera.near = 0.1;
 spotlight.shadow.camera.far = 30;
-spotlight.shadow.mapSize.width = 2048;
-spotlight.shadow.mapSize.height = 2048;
+spotlight.shadow.mapSize.width = 1024;
+spotlight.shadow.mapSize.height = 1024;
 scene.add(spotlight);
 ////////// FRONT SPOTLIGHT //////////
 frontSpotlight.position.set(-10, 10, 40);
@@ -218,8 +203,8 @@ frontSpotlight.castShadow = true;
 frontSpotlight.shadow.bias = -0.001; // Fixes shadow artifacts.
 frontSpotlight.shadow.camera.near = 0.1;
 frontSpotlight.shadow.camera.far = 25;
-frontSpotlight.shadow.mapSize.width = 1024;
-frontSpotlight.shadow.mapSize.height = 1024;
+frontSpotlight.shadow.mapSize.width = 512;
+frontSpotlight.shadow.mapSize.height = 512;
 scene.add(frontSpotlight);
 ////////// REAR SPOTLIGHT //////////
 rearSpotlight.position.set(-5, 10, -11);
@@ -229,8 +214,8 @@ rearSpotlight.castShadow = true;
 rearSpotlight.shadow.camera.near = 0.
 frontSpotlight.shadow.bias = -0.001; // Fixes shadow artifacts.1;
 rearSpotlight.shadow.camera.far = 25;
-rearSpotlight.shadow.mapSize.width = 1024;
-rearSpotlight.shadow.mapSize.height = 1024;
+rearSpotlight.shadow.mapSize.width = 512;
+rearSpotlight.shadow.mapSize.height = 512;
 scene.add(rearSpotlight);
 ////////// RIGHT SPOTLIGHT //////////
 rightSpotlight.position.copy(car1.position).add(rightOffset);
@@ -239,8 +224,8 @@ rightSpotlight.castShadow = true;
 rightSpotlight.shadow.bias = -0.001; // Fixes shadow artifacts.
 rightSpotlight.shadow.camera.near = 0.1;
 rightSpotlight.shadow.camera.far = 25;
-rightSpotlight.shadow.mapSize.width = 1024;
-rightSpotlight.shadow.mapSize.height = 1024;
+rightSpotlight.shadow.mapSize.width = 512;
+rightSpotlight.shadow.mapSize.height = 512;
 scene.add(rightSpotlight);
 ////////// LEFT SPOTLIGHT //////////
 leftSpotlight.position.copy(car1.position).add(leftOffset);
@@ -249,21 +234,9 @@ leftSpotlight.castShadow = true;
 leftSpotlight.shadow.bias = -0.002; // Fixes shadow artifacts.
 leftSpotlight.shadow.camera.near = 5;
 leftSpotlight.shadow.camera.far = 25;
-leftSpotlight.shadow.mapSize.width = 1024;
-leftSpotlight.shadow.mapSize.height = 1024;
+leftSpotlight.shadow.mapSize.width = 512;
+leftSpotlight.shadow.mapSize.height = 512;
 scene.add(leftSpotlight);
-
-////////////////////////////////////
-////////// POSTPROCESSING //////////
-////////////////////////////////////
-
-const effectComposer = new EffectComposer(renderer);
-
-///// SSAO -> I don't recommend it, way too much performance loss for little gain.
-// const ssaoPass = new SSAOPass(scene, camera);
-// effectComposer.addPass(ssaoPass);
-// ssaoPass.intensity = 0.2;
-
 
 /////////////////////////////////
 ////////// LOAD MODELS //////////
@@ -496,129 +469,14 @@ document.addEventListener("DOMContentLoaded", () => {
   playNextTrack();
 });
 
-///////////////////////////////////
-////////// DEVTOOLS AREA //////////
-///////////////////////////////////
-
-/* If you want to adjust certain stuff, 
-like lighting and angles, uncomment the necessary lines 
-*/
-
-// //////// FPS COUNTER
-// import Stats from "stats.js";
-// const stats = new Stats();
-// stats.showPanel(0);
-// stats.dom.style.position = "absolute";
-// stats.dom.style.top = "0";
-// stats.dom.style.left = "0";
-// document.body.appendChild(stats.dom);
-
-// ////////// DEV.GUI SETUP //////////
-// const gui = new GUI();
-// function updateCameraPosition() {
-//   camera.position.set(
-//     parameters.cameraPositionX,
-//     parameters.cameraPositionY,
-//     parameters.cameraPositionZ
-//   );
-// }
-// const cameras = gui.addFolder("Camera");
-// cameras.add(parameters, "cameraPositionX", -50, 50).onChange(updateCameraPosition);
-// cameras.add(parameters, "cameraPositionY", -50, 50).onChange(updateCameraPosition);
-// cameras.add(parameters, "cameraPositionZ", -50, 50).onChange(updateCameraPosition);
-
-// ////////// DIRECTIONAL LIGHT GUI
-// const lightParameters = {
-//   lightIntensity: DIRECTIONAL_LIGHT_INTENSITY,
-//   lightX: directionalLight.position.x,
-//   lightY: directionalLight.position.y,
-//   lightZ: directionalLight.position.z,
-// };
-
-// function updateDirectionalLight() {
-//   directionalLight.intensity = lightParameters.lightIntensity;
-//   directionalLight.position.set(
-//     lightParameters.lightX,
-//     lightParameters.lightY,
-//     lightParameters.lightZ
-//   );
-// }
-// const lightFolder = gui.addFolder("Directional Light");
-// lightFolder.add(lightParameters, "lightIntensity", 0, 10).onChange(updateDirectionalLight);
-// lightFolder.add(lightParameters, "lightX", -50, 50).onChange(updateDirectionalLight);
-// lightFolder.add(lightParameters, "lightY", -50, 50).onChange(updateDirectionalLight);
-// lightFolder.add(lightParameters, "lightZ", -50, 50).onChange(updateDirectionalLight);
-
-// ////////// TOP SPOTLIGHT GUI
-// const topSpotlightFolder = gui.addFolder("Top Spotlight");
-// topSpotlightFolder.addColor(spotlightParams, "topSpotlightColor").onChange(() => {spotlight.color.set(spotlightParams.topSpotlightColor);});
-// topSpotlightFolder.add(spotlightParams, "topSpotlightIntensity", 0, 50).onChange(() => {spotlight.intensity = spotlightParams.topSpotlightIntensity;});
-// topSpotlightFolder.add(spotlightParams, "topSpotlightAngle", 0, Math.PI).onChange(() => {spotlight.angle = spotlightParams.topSpotlightAngle;});
-// topSpotlightFolder.add(spotlightParams, "topSpotlightPenumbra", 0, 2).onChange(() => {spotlight.penumbra = spotlightParams.topSpotlightPenumbra;});
-// topSpotlightFolder.add(spotlightParams, "topSpotlightDistance", 1, 50).onChange(() => {spotlight.distance = spotlightParams.topSpotlightDistance;});
-// topSpotlightFolder.add(spotlightParams, "topSpotlightX", -50, 50).onChange(() => {spotlight.position.x = spotlightParams.topSpotlightX;});
-// topSpotlightFolder.add(spotlightParams, "topSpotlightY", -50, 50).onChange(() => {spotlight.position.y = spotlightParams.topSpotlightY;});
-// topSpotlightFolder.add(spotlightParams, "topSpotlightZ", -50, 50).onChange(() => {spotlight.position.z = spotlightParams.topSpotlightZ;});
-
-// ////////// FRONT SPOTLIGHT GUI
-// const frontSpotlightFolder = gui.addFolder("Front Spotlight");
-// frontSpotlightFolder.addColor(spotlightParams, "frontSpotlightColor").onChange(() => {frontSpotlight.color.set(spotlightParams.frontSpotlightColor);});
-// frontSpotlightFolder.add(spotlightParams, "frontSpotlightIntensity", 0, 50).onChange(() => {frontSpotlight.intensity = spotlightParams.frontSpotlightIntensity;});
-// frontSpotlightFolder.add(spotlightParams, "frontSpotlightAngle", 0, Math.PI).onChange(() => {frontSpotlight.angle = spotlightParams.frontSpotlightAngle;});
-// frontSpotlightFolder.add(spotlightParams, "frontSpotlightPenumbra", 0, 2).onChange(() => {frontSpotlight.penumbra = spotlightParams.frontSpotlightPenumbra;});
-// frontSpotlightFolder.add(spotlightParams, "frontSpotlightDistance", 1, 50).onChange(() => {frontSpotlight.distance = spotlightParams.frontSpotlightDistance;});
-
-// ////////// REAR SPOTLIGHT GUI
-// const rearSpotlightFolder = gui.addFolder("Rear Spotlight");
-// rearSpotlightFolder.addColor(spotlightParams, "rearSpotlightColor").onChange(() => {rearSpotlight.color.set(spotlightParams.rearSpotlightColor);});
-// rearSpotlightFolder.add(spotlightParams, "rearSpotlightIntensity", 0, 50).onChange(() => {rearSpotlight.intensity = spotlightParams.rearSpotlightIntensity;});
-// rearSpotlightFolder.add(spotlightParams, "rearSpotlightAngle", 0, Math.PI).onChange(() => {rearSpotlight.angle = spotlightParams.rearSpotlightAngle;});
-// rearSpotlightFolder.add(spotlightParams, "rearSpotlightPenumbra", 0, 2).onChange(() => {rearSpotlight.penumbra = spotlightParams.rearSpotlightPenumbra;});
-// rearSpotlightFolder.add(spotlightParams, "rearSpotlightDistance", 1, 50).onChange(() => {rearSpotlight.distance = spotlightParams.rearSpotlightDistance;});
-
-// ////////// RIGHT SPOTLIGHT GUI
-// const rightSpotlightFolder = gui.addFolder("Right Spotlight");
-// rightSpotlightFolder.addColor(spotlightParams, "rightSpotlightColor").onChange(() => {rightSpotlight.color.set(spotlightParams.rightSpotlightColor);});
-// rightSpotlightFolder.add(spotlightParams, "rightSpotlightIntensity", 0, 50).onChange(() => {rightSpotlight.intensity = spotlightParams.rightSpotlightIntensity;});
-// rightSpotlightFolder.add(spotlightParams, "rightSpotlightAngle", 0, Math.PI).onChange(() => {rightSpotlight.angle = spotlightParams.rightSpotlightAngle;});
-// rightSpotlightFolder.add(spotlightParams, "rightSpotlightPenumbra", 0, 2).onChange(() => {rightSpotlight.penumbra = spotlightParams.rightSpotlightPenumbra;});
-// rightSpotlightFolder.add(spotlightParams, "rightSpotlightDistance", 1, 50).onChange(() => {rightSpotlight.distance = spotlightParams.rightSpotlightDistance;});
-
-// ////////// LEFT SPOTLIGHT GUI
-// const leftSpotlightFolder = gui.addFolder("Left Spotlight");
-// leftSpotlightFolder.addColor(spotlightParams, "leftSpotlightColor").onChange(() => {leftSpotlight.color.set(spotlightParams.leftSpotlightColor);});
-// leftSpotlightFolder.add(spotlightParams, "leftSpotlightIntensity", 0, 50).onChange(() => {leftSpotlight.intensity = spotlightParams.leftSpotlightIntensity;});
-// leftSpotlightFolder.add(spotlightParams, "leftSpotlightAngle", 0, Math.PI).onChange(() => {leftSpotlight.angle = spotlightParams.leftSpotlightAngle;});
-// leftSpotlightFolder.add(spotlightParams, "leftSpotlightPenumbra", 0, 2).onChange(() => {leftSpotlight.penumbra = spotlightParams.leftSpotlightPenumbra;});
-// leftSpotlightFolder.add(spotlightParams, "leftSpotlightDistance", 1, 50).onChange(() => {leftSpotlight.distance = spotlightParams.leftSpotlightDistance;});
-
-// // //////// DEBUG CAM (DISABLED WHEN AUTO ROTATE IS ENABLED IN THE FUNCTION.)
-// const controls = new OrbitControls(camera, canvas);
-// controls.enableDamping = true;
-// camera.position.z = 55;
-// camera.position.y = 15;
-
-//////////////////////////////////////////
-////////// END OF DEVTOOLS AREA //////////
-//////////////////////////////////////////
-
 ////////////////////////////////
 ////////// MAIN STUFF //////////
 ////////////////////////////////
 
-const distance = 27.5; // Distance to model.
-const yOffset = 2.5; // Camera height.
+const distance = 26; // Distance to model.
+const yOffset = 2; // Camera height.
 
 function showOnCanvas() {
-  // Devtools (including the stats.end())
-  // stats.begin();
-  // controls.update();
-  // updateDirectionalLight();
-
-  // Post processing
-  // effectComposer.render();
-
-  // Camera rotation.
   angle += 0.0011;
   const x = center.x + distance * Math.cos(angle);
   const z = center.z + distance * Math.sin(angle);
@@ -627,5 +485,4 @@ function showOnCanvas() {
 
   renderer.render(scene, camera);
   requestAnimationFrame(showOnCanvas);
-  // stats.end();
 }
