@@ -1,6 +1,8 @@
-﻿# A Gran Turismo inspired car showroom scene made with Three.js & late nights.
- The new version can be found [here.](https://github.com/jdichh/car-showroom-R3F)
+﻿# Gran Turismo Sport Inspired Car Showroom Scene.
+ A car showroom mainly inspired by the one in Gran Turismo Sport.
+
+ The new version can be found made with React-Three-Fiber can be found [here.](https://github.com/jdichh/car-showroom-R3F)
 ## Checklist
 <ul>
-  <li><strike>Migrate to R3F</strike></li>
+  <li><strike>Migrate to React-Three-Fiber</strike></li>
 </ul>
