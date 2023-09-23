@@ -15,7 +15,7 @@
 </ul>
 
 ## Project setup
-If you want to try this out for yourself, download the source code, and run these lines of code.
+If you want to try this out for yourself, download the source code, open the folder in VSCode/VSCodium, and run these lines of code.
 ```
 pnpm install
 ```
